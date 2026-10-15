@@ -429,11 +429,11 @@ button{ font:inherit; color:inherit; border:0; background:none; padding:0; margi
     return Object.assign(base, extra);
   }
   const state = {
-    // default layout: tall light, wide lock + thermostat, 3x2 camera
+    // default layout: light, lock, thermostat in a row; 3x2 camera below
     items: [
-      mk('light', 'Front Porch', { h: 2 }),
-      mk('lock', 'Back Door', { w: 2, locked: false }),
-      mk('thermo', 'Thermostat', { w: 2, cur: 67, target: 66 }),
+      mk('light', 'Front Porch'),
+      mk('lock', 'Back Door', { locked: true }),
+      mk('thermo', 'Thermostat', { cur: 66, target: 66 }),
       mk('camera', 'Kitchen', { w: 3, h: 2 })
     ],
     editing: false
