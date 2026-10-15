@@ -234,6 +234,13 @@ button{ font:inherit; color:inherit; border:0; background:none; padding:0; margi
 .w.camera.compact:not(.live) .ts{ display:none; }
 .menu.left{ right:auto; left:16px; transform-origin:22px 22px; }
 
+/* edit mode: drag cards to move them */
+.phone.editing .w .glass{ cursor:grab; touch-action:none; }
+.w.moving{ z-index:6; scale:1.05; }
+.w.moving .glass{ cursor:grabbing; box-shadow:var(--glass-edge),0 18px 40px rgba(0,0,0,.16),var(--glass-sheen); }
+.w.moving .del,.w.moving .grab{ opacity:0; }
+.scroll{ -webkit-touch-callout:none; }
+
 /* ---------- menu ---------- */
 .scrim{ position:absolute; inset:0; z-index:8; display:none; }
 .scrim.open{ display:block; }
@@ -292,7 +299,7 @@ button{ font:inherit; color:inherit; border:0; background:none; padding:0; margi
 </head>
 <body>
 <div class="stage">
-  <p class="hint">Tap lights and locks to switch them, slide a light to dim, use the arrows to set the temperature. ••• opens Add and Edit.</p>
+  <p class="hint">Tap lights and locks to switch them, slide a light to dim, use the arrows to set the temperature. Long-press empty space to edit, then drag cards to move them.</p>
   <div class="phone" id="phone">
     <div class="scroll" id="scroll"><div class="grid" id="grid" role="list"></div></div>
 
@@ -422,7 +429,13 @@ button{ font:inherit; color:inherit; border:0; background:none; padding:0; margi
     return Object.assign(base, extra);
   }
   const state = {
-    items: [mk('light', 'Front Porch'), mk('lock', 'Back Door'), mk('thermo', 'Thermostat'), mk('camera', 'Kitchen')],
+    // default layout: tall light, wide lock + thermostat, 3x2 camera
+    items: [
+      mk('light', 'Front Porch', { h: 2 }),
+      mk('lock', 'Back Door', { w: 2, locked: false }),
+      mk('thermo', 'Thermostat', { w: 2, cur: 67, target: 66 }),
+      mk('camera', 'Kitchen', { w: 3, h: 2 })
+    ],
     editing: false
   };
 
@@ -434,6 +447,7 @@ button{ font:inherit; color:inherit; border:0; background:none; padding:0; margi
   const scrim = document.getElementById('scrim');
   const moreBtn = document.getElementById('moreBtn');
   const toastEl = document.getElementById('toast');
+  const scrollEl = document.getElementById('scroll');
   const els = new Map();
   let unit = 118; const GAP = 8;
 
@@ -761,6 +775,69 @@ button{ font:inherit; color:inherit; border:0; background:none; padding:0; margi
       if (type === 'camera' && (e.key === 'Enter' || e.key === ' ')){ e.preventDefault(); setLive(l, !l.live); }
     });
 
+    // move: in edit mode, drag a card; the others reflow around it as you pass over them
+    let m = null;
+    const layoutPos = () => {
+      const s = scrollEl.getBoundingClientRect();
+      return { x: s.left + el.offsetLeft - scrollEl.scrollLeft, y: s.top + el.offsetTop - scrollEl.scrollTop };
+    };
+    const follow = () => {
+      const lp = layoutPos();
+      m.tx = m.px - m.ax - lp.x; m.ty = m.py - m.ay - lp.y;
+      el.style.translate = `${m.tx}px ${m.ty}px`;
+    };
+    g.addEventListener('pointerdown', e => {
+      if (!state.editing || e.button > 0) return;
+      e.preventDefault();
+      const lp = layoutPos();
+      m = { id: e.pointerId, sx: e.clientX, sy: e.clientY, px: e.clientX, py: e.clientY, ax: e.clientX - lp.x, ay: e.clientY - lp.y, tx: 0, ty: 0, started: false, over: null };
+      try { g.setPointerCapture(e.pointerId); } catch(_){}
+    });
+    g.addEventListener('pointermove', e => {
+      if (!m || e.pointerId !== m.id) return;
+      m.px = e.clientX; m.py = e.clientY;
+      if (!m.started){
+        if (Math.hypot(m.px - m.sx, m.py - m.sy) < 6) return;
+        m.started = true; el.style.transformOrigin = '50% 50%'; el.classList.add('moving'); tick(10);
+        (el._flip || []).forEach(a => a.cancel()); el._flip = null;
+        m.scrollT = setInterval(() => {
+          const s = scrollEl.getBoundingClientRect();
+          const dv = m.py < s.top + 120 ? -1 : m.py > s.bottom - 110 ? 1 : 0;
+          if (dv){ scrollEl.scrollTop += dv * 8; follow(); }
+        }, 16);
+      }
+      follow();
+      // which card is under the finger?
+      let target = null;
+      for (const [oid, oel] of els){
+        if (oid === id) continue;
+        const r = oel._glass.getBoundingClientRect();
+        if (m.px >= r.left && m.px <= r.right && m.py >= r.top && m.py <= r.bottom){ target = oid; break; }
+      }
+      if (target === m.over) return;
+      m.over = target;
+      if (target == null) return;
+      const from = state.items.findIndex(x => x.id === id), to = state.items.findIndex(x => x.id === target);
+      flip(() => {
+        const [it] = state.items.splice(from, 1);
+        state.items.splice(to, 0, it);
+        render();
+      }, id);
+      follow(); tick(6);
+    });
+    const mend = e => {
+      if (!m || e.pointerId !== m.id) return;
+      clearInterval(m.scrollT);
+      if (m.started){
+        el.classList.remove('moving');
+        el.style.translate = '';
+        if (!REDUCE.matches) el.animate([{ translate: `${m.tx}px ${m.ty}px` }, { translate: '0px 0px' }], { duration: 320, easing: SETTLE });
+      }
+      m = null;
+    };
+    g.addEventListener('pointerup', mend);
+    g.addEventListener('pointercancel', mend);
+
     // delete
     el.querySelector('.del').addEventListener('click', e => {
       e.stopPropagation();
@@ -827,14 +904,14 @@ button{ font:inherit; color:inherit; border:0; background:none; padding:0; margi
   }
 
   // FLIP: widgets glide to their new spots; a resized widget's card eases to its new size
-  function flip(mutate){
+  function flip(mutate, skip){
     const before = new Map();
     for (const [id, el] of els) before.set(id, el._glass.getBoundingClientRect());
     for (const el of els.values()){ (el._flip || []).forEach(a => a.cancel()); el._flip = null; }
     mutate();
     if (REDUCE.matches) return;
     for (const [id, el] of els){
-      const a = before.get(id); if (!a) continue;
+      const a = before.get(id); if (!a || id === skip) continue;
       const b = el._glass.getBoundingClientRect();
       const dx = a.left - b.left, dy = a.top - b.top, dw = b.width - a.width, dh = b.height - a.height;
       const moved = Math.abs(dx) >= .5 || Math.abs(dy) >= .5, sized = Math.abs(dw) >= .5 || Math.abs(dh) >= .5;
@@ -868,7 +945,9 @@ button{ font:inherit; color:inherit; border:0; background:none; padding:0; margi
     phone.classList.toggle('editing', on);
     document.getElementById('tbHome').hidden = on;
     document.getElementById('tbEdit').hidden = !on;
-    (on ? document.getElementById('doneBtn') : moreBtn).focus({ preventScroll: true });
+    // move keyboard focus only when the switch came from the keyboard, so touch/mouse never shows a focus ring
+    const kb = document.activeElement && document.activeElement.matches && document.activeElement.matches(':focus-visible');
+    if (kb) (on ? document.getElementById('doneBtn') : moreBtn).focus({ preventScroll: true });
   }
 
   // one menu, two layers: the main list, and an "Add" layer that slides in on top of it
@@ -902,6 +981,29 @@ button{ font:inherit; color:inherit; border:0; background:none; padding:0; margi
     toastEl.textContent = msg; toastEl.classList.add('show');
     clearTimeout(tt); tt = setTimeout(() => toastEl.classList.remove('show'), 1400);
   }
+
+  // long-press empty space to enter edit mode; tap empty space to leave it
+  let lp = null;
+  scrollEl.addEventListener('contextmenu', e => { if (!e.target.closest('.w')) e.preventDefault(); });
+  scrollEl.addEventListener('pointerdown', e => {
+    if (e.target.closest('.w') || e.button > 0) return;
+    lp = { id: e.pointerId, x: e.clientX, y: e.clientY, fired: false };
+    if (!state.editing) lp.t = setTimeout(() => {
+      lp.fired = true; setEditing(true); tick(20);
+      if (!REDUCE.matches) els.forEach(el => el.animate([{ scale: '.95' }, { scale: '1' }], { duration: 500, easing: SPRING.bouncy }));
+    }, 450);
+  });
+  scrollEl.addEventListener('pointermove', e => {
+    if (lp && e.pointerId === lp.id && Math.hypot(e.clientX - lp.x, e.clientY - lp.y) > 10){ clearTimeout(lp.t); lp.moved = true; }
+  });
+  const lpEnd = e => {
+    if (!lp || e.pointerId !== lp.id) return;
+    clearTimeout(lp.t);
+    if (e.type === 'pointerup' && state.editing && !lp.fired && !lp.moved) setEditing(false);
+    lp = null;
+  };
+  scrollEl.addEventListener('pointerup', lpEnd);
+  scrollEl.addEventListener('pointercancel', lpEnd);
 
   moreBtn.addEventListener('click', () => menu.classList.contains('open') ? closeMenus() : openMenu('main', 'right'));
   scrim.addEventListener('pointerdown', closeMenus);
