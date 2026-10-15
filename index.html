@@ -31,8 +31,10 @@
   --spring-bouncy:cubic-bezier(.34,1.56,.64,1);
   --spring-soft:cubic-bezier(.25,1.2,.5,1);
   /* iOS Liquid Glass: translucent body, backdrop blur + saturation, bright specular rim, soft ambient lift */
-  --glass-bg:rgba(255,255,255,.4);
-  --glass-bg-strong:rgba(255,255,255,.5);
+  /* glass tuning: amount of white in the glass (0 = fully clear, 1 = solid) — driven by the side panel */
+  --card-a:0; --card-on-a:.12; --ctl-a:0; --ctl-a2:0;
+  --glass-bg:rgba(255,255,255,var(--ctl-a2));
+  --glass-bg-strong:rgba(255,255,255,var(--ctl-a));
   --glass-fill:linear-gradient(180deg,rgba(255,255,255,.38) 0%,rgba(255,255,255,.04) 55%,rgba(255,255,255,.16) 100%);
   --glass-blur:blur(16px) saturate(2.2);
   --glass-edge:0 0 0 .5px rgba(0,0,0,.05);
@@ -109,10 +111,10 @@ button{ font:inherit; color:inherit; border:0; background:none; padding:0; margi
 .w:focus-visible{ box-shadow:0 0 0 2px #3b82f6; }
 .w.pressed{ scale:.96; transition:scale .14s ease-out; }
 .w.dragging{ transition:none; }
-.glass{ position:absolute; inset:0; border-radius:26px; overflow:hidden; background:var(--glass-fill),rgba(255,255,255,.28);
+.glass{ position:absolute; inset:0; border-radius:26px; overflow:hidden; background:var(--glass-fill),rgba(255,255,255,var(--card-a));
   -webkit-backdrop-filter:var(--glass-blur); backdrop-filter:var(--glass-blur);
   box-shadow:var(--glass-edge),var(--glass-lift),var(--glass-sheen); transition:box-shadow .25s ease, background .3s ease; }
-.w.on .glass{ background:var(--glass-fill),rgba(255,255,255,.4); }
+.w.on .glass{ background:var(--glass-fill),rgba(255,255,255,var(--card-on-a)); }
 /* specular rim shared by every glass surface: bright top-left, fading, catching light again bottom-right */
 .glass::after,.gbtn::after,.tabbar::after,.orb::after,.menu::after,.del::after{
   content:""; position:absolute; inset:0; z-index:1; border-radius:inherit; pointer-events:none; padding:1px;
