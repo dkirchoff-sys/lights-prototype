@@ -275,7 +275,10 @@ button{ font:inherit; color:inherit; border:0; background:none; padding:0; margi
 .dd .l{ padding-left:4px; white-space:nowrap; }
 
 /* Peek & Pop */
-.peek{ position:absolute; inset:0; z-index:30; background:rgba(0,0,0,.45); -webkit-backdrop-filter:blur(20px); backdrop-filter:blur(20px); color:#fff; }
+.peek{ position:absolute; inset:0; z-index:30; color:#fff; }
+/* the dim + blur lives on its own layer: glass controls sit beside it (not inside it), so their own blur keeps working while things fade */
+.pk-bg{ position:absolute; inset:0; background:rgba(0,0,0,.45); -webkit-backdrop-filter:blur(20px); backdrop-filter:blur(20px); }
+.pk-oi > svg:not(.spin){ width:88px; height:88px; }
 .peek[hidden]{ display:none; }
 .pk-body{ position:absolute; left:0; right:0; margin:0 auto; top:calc(var(--sb) + 138px); width:282px; display:flex; flex-direction:column; align-items:center; gap:16px; }
 .pk-title,.pk-status{ font-weight:600; font-size:17px; line-height:22px; letter-spacing:-.43px; text-align:center; width:100%; }
@@ -403,7 +406,10 @@ button{ font:inherit; color:inherit; border:0; background:none; padding:0; margi
   .hint{ display:none; }
   .phone{ width:100%; height:100%; max-height:none; border-radius:0; box-shadow:none; }
   /* the floating tab bar sits ~21pt above the screen edge like iOS, overlapping the home-indicator zone instead of stacking on top of it */
-  :root{ --sb:0px; background:var(--surface); padding-bottom:0; }
+  /* on phones the app runs edge to edge: the status-bar inset lives inside the phone (as --sb) instead of as page padding,
+     so overlays like Peek & Pop can cover the area behind the status bar too */
+  :root{ --sb:env(safe-area-inset-top, 0px); background:var(--surface); padding-top:0; padding-bottom:0; }
+  .topbar{ padding-top:var(--sb); }
   .tabs{ padding-bottom:max(21px, calc(env(safe-area-inset-bottom, 0px) - 13px)); }
   body{ background:var(--surface); }
   .status{ display:none; }
@@ -415,7 +421,7 @@ button{ font:inherit; color:inherit; border:0; background:none; padding:0; margi
 </head>
 <body>
 <div class="stage">
-  <p class="hint">Tap to switch, slide a light to dim. Long-press a light, thermostat or outlet for more controls. Long-press empty space to edit and drag cards.</p>
+  <p class="hint">Tap to switch, slide a light to dim. Long-press a light, lock, thermostat or outlet for more controls. Long-press empty space to edit and drag cards.</p>
   <div class="phone" id="phone">
     <div class="scroll" id="scroll"><div class="grid" id="grid" role="list"></div></div>
 
@@ -461,6 +467,7 @@ button{ font:inherit; color:inherit; border:0; background:none; padding:0; margi
     </div>
 
     <div class="peek" id="peek" hidden>
+      <div class="pk-bg"></div>
       <div class="pk-body" id="peekBody"></div>
       <div class="pk-settings pc"><button class="pk-btn" id="peekSettings" aria-label="Settings"><svg width="22" height="19" viewBox="0 0 22 19" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M0.879883 3.42822C0.630859 3.42822 0.420573 3.34245 0.249023 3.1709C0.0830078 2.99382 0 2.78353 0 2.54004C0 2.29655 0.0830078 2.08903 0.249023 1.91748C0.420573 1.7404 0.630859 1.65186 0.879883 1.65186H11.9033V3.42822H0.879883ZM13.7959 5.07178C13.3034 5.07178 12.8662 4.96387 12.4844 4.74805C12.1081 4.53223 11.8092 4.2334 11.5879 3.85156C11.3721 3.46973 11.2642 3.03255 11.2642 2.54004C11.2642 2.04753 11.3721 1.61035 11.5879 1.22852C11.8092 0.841146 12.1081 0.539551 12.4844 0.32373C12.8662 0.10791 13.3034 0 13.7959 0H15.8711C16.3636 0 16.8008 0.10791 17.1826 0.32373C17.5645 0.539551 17.8633 0.841146 18.0791 1.22852C18.2949 1.61035 18.4028 2.04753 18.4028 2.54004C18.4028 3.03255 18.2949 3.46973 18.0791 3.85156C17.8633 4.2334 17.5645 4.53223 17.1826 4.74805C16.8008 4.96387 16.3636 5.07178 15.8711 5.07178H13.7959ZM13.7959 3.78516H15.8711C16.2419 3.78516 16.5435 3.67171 16.7759 3.44482C17.0083 3.2124 17.1245 2.91081 17.1245 2.54004C17.1245 2.1748 17.0083 1.87598 16.7759 1.64355C16.5435 1.4056 16.2419 1.28662 15.8711 1.28662H13.7959C13.4251 1.28662 13.1235 1.4056 12.8911 1.64355C12.6642 1.87598 12.5508 2.1748 12.5508 2.54004C12.5508 2.91081 12.6642 3.2124 12.8911 3.44482C13.1235 3.67171 13.4251 3.78516 13.7959 3.78516ZM17.772 3.42822V1.65186H20.9595C21.1864 1.65186 21.3828 1.7404 21.5488 1.91748C21.7204 2.08903 21.8062 2.29655 21.8062 2.54004C21.8062 2.78353 21.7204 2.99382 21.5488 3.1709C21.3828 3.34245 21.1864 3.42822 20.9595 3.42822H17.772ZM0.85498 10.0771C0.617025 10.0771 0.415039 9.98861 0.249023 9.81152C0.0830078 9.63444 0 9.42415 0 9.18066C0 8.93717 0.0830078 8.72965 0.249023 8.55811C0.415039 8.38656 0.617025 8.30078 0.85498 8.30078H4.03418V10.0771H0.85498ZM5.93506 11.7124C5.44255 11.7124 5.00537 11.6045 4.62354 11.3887C4.2417 11.1729 3.94287 10.8768 3.72705 10.5005C3.51123 10.1187 3.40332 9.67871 3.40332 9.18066C3.40332 8.68815 3.51123 8.25098 3.72705 7.86914C3.94287 7.4873 4.2417 7.18848 4.62354 6.97266C5.00537 6.75684 5.44255 6.64893 5.93506 6.64893H8.01025C8.50277 6.64893 8.93994 6.75684 9.32178 6.97266C9.70361 7.18848 10.0024 7.4873 10.2183 7.86914C10.4341 8.25098 10.542 8.68815 10.542 9.18066C10.542 9.67871 10.4341 10.1187 10.2183 10.5005C10.0024 10.8768 9.70361 11.1729 9.32178 11.3887C8.93994 11.6045 8.50277 11.7124 8.01025 11.7124H5.93506ZM5.93506 10.4341H8.01025C8.37549 10.4341 8.67432 10.3179 8.90674 10.0854C9.14469 9.85303 9.26367 9.55143 9.26367 9.18066C9.26367 8.81543 9.14469 8.5166 8.90674 8.28418C8.67432 8.04622 8.37549 7.92725 8.01025 7.92725H5.93506C5.56982 7.92725 5.271 8.04622 5.03857 8.28418C4.80615 8.5166 4.68994 8.81543 4.68994 9.18066C4.68994 9.55143 4.80615 9.85303 5.03857 10.0854C5.271 10.3179 5.56982 10.4341 5.93506 10.4341ZM9.90283 10.0771V8.30078H20.9263C21.1698 8.30078 21.3773 8.38656 21.5488 8.55811C21.7204 8.72965 21.8062 8.93717 21.8062 9.18066C21.8062 9.42415 21.7204 9.63444 21.5488 9.81152C21.3773 9.98861 21.1698 10.0771 20.9263 10.0771H9.90283ZM0.879883 16.7178C0.630859 16.7178 0.420573 16.6292 0.249023 16.4521C0.0830078 16.2806 0 16.0731 0 15.8296C0 15.5861 0.0830078 15.3758 0.249023 15.1987C0.420573 15.0272 0.630859 14.9414 0.879883 14.9414H11.9033V16.7178H0.879883ZM13.7959 18.3613C13.3034 18.3613 12.8662 18.2534 12.4844 18.0376C12.1081 17.8218 11.8092 17.5229 11.5879 17.1411C11.3721 16.7648 11.2642 16.3276 11.2642 15.8296C11.2642 15.3371 11.3721 14.8999 11.5879 14.5181C11.8092 14.1307 12.1081 13.8291 12.4844 13.6133C12.8662 13.3975 13.3034 13.2896 13.7959 13.2896H15.8711C16.3636 13.2896 16.8008 13.3975 17.1826 13.6133C17.5645 13.8291 17.8633 14.1307 18.0791 14.5181C18.2949 14.8999 18.4028 15.3371 18.4028 15.8296C18.4028 16.3276 18.2949 16.7648 18.0791 17.1411C17.8633 17.5229 17.5645 17.8218 17.1826 18.0376C16.8008 18.2534 16.3636 18.3613 15.8711 18.3613H13.7959ZM13.7959 17.0747H15.8711C16.2419 17.0747 16.5435 16.9585 16.7759 16.7261C17.0083 16.4992 17.1245 16.2004 17.1245 15.8296C17.1245 15.4644 17.0083 15.1655 16.7759 14.9331C16.5435 14.6951 16.2419 14.5762 15.8711 14.5762H13.7959C13.4251 14.5762 13.1235 14.6951 12.8911 14.9331C12.6642 15.1655 12.5508 15.4644 12.5508 15.8296C12.5508 16.2004 12.6642 16.4992 12.8911 16.7261C13.1235 16.9585 13.4251 17.0747 13.7959 17.0747ZM17.772 16.7178V14.9414H20.9595C21.1864 14.9414 21.3828 15.0272 21.5488 15.1987C21.7204 15.3758 21.8062 15.5861 21.8062 15.8296C21.8062 16.0731 21.7204 16.2806 21.5488 16.4521C21.3828 16.6292 21.1864 16.7178 20.9595 16.7178H17.772Z" fill="white"/></svg></button><span>Settings</span></div>
     </div>
@@ -857,6 +864,8 @@ button{ font:inherit; color:inherit; border:0; background:none; padding:0; margi
     if (el) anim(el._icon, [{ opacity: 1 }, { opacity: .45 }, { opacity: 1 }], { duration: 700, easing: 'ease-in-out', iterations: 1 });
     setTimeout(() => {
       l.busy = false; l.locked = !l.locked; paint(l);
+      const pk = peekId === l.id && document.querySelector('.pk-oi');
+      if (pk) anim(pk, [{ transform: 'scale(.6) rotate(-8deg)' }, { transform: 'none' }], { duration: 650, easing: SPRING.bouncy });
       if (!el) return;
       tick(l.locked ? 14 : 8);
       anim(el._icon, [{ transform: 'scale(.6) rotate(-8deg)' }, { transform: 'none' }], { duration: 650, easing: SPRING.bouncy });
@@ -947,7 +956,7 @@ button{ font:inherit; color:inherit; border:0; background:none; padding:0; margi
     if (l.live) el._idleT = setTimeout(() => el.classList.add('idle'), 2500);
   }
 
-  const PEEKABLE = { light: true, thermo: true, outlet: true };
+  const PEEKABLE = { light: true, thermo: true, outlet: true, lock: true };
 
   function bindWidget(el, id, type){
     const g = el._glass;
@@ -1272,6 +1281,12 @@ button{ font:inherit; color:inherit; border:0; background:none; padding:0; margi
   // ---------- Peek & Pop ----------
   const peekEl = document.getElementById('peek');
   const peekBody = document.getElementById('peekBody');
+  // home-screen app: tint the system status-bar area to match the dimmed Peek & Pop background
+  const themeMeta = document.querySelector('meta[name="theme-color"]');
+  const setStatusTint = on => { if (themeMeta) themeMeta.setAttribute('content', on ? '#87878A' : '#f2f2f6'); };
+  const peekBg = peekEl.querySelector('.pk-bg');
+  // fade each control on its own: fading a parent of glass breaks the glass's backdrop blur and causes a flash
+  const peekParts = () => peekEl.querySelectorAll('.pk-title,.pk-status,.pk-num,.pk-btn,.pk-group,.pk-pill,.pk-circle,.pk-settings > span');
   let peekId = null, peekOpenedAt = 0;
   function openPeek(l){
     peekId = l.id; peekOpenedAt = Date.now();
@@ -1291,23 +1306,29 @@ button{ font:inherit; color:inherit; border:0; background:none; padding:0; margi
         <div class="pk-status"></div>
         <div class="pk-group pk-single pc"><button class="pk-row" data-act="color"><span class="pk-lab">Color</span><span class="pk-swatch"><i></i></span></button></div>`;
       bindPill(l);
-    } else if (l.type === 'outlet'){
+    } else if (l.type === 'outlet' || l.type === 'lock'){
       peekBody.innerHTML = `<div class="pk-title"></div>
-        <button class="pk-circle pc" data-act="outlet" aria-label="Switch outlet"><span class="pk-oi"></span></button>
+        <button class="pk-circle pc" data-act="${l.type}" aria-label="${l.type === 'lock' ? 'Lock or unlock' : 'Switch outlet'}"><span class="pk-oi"></span></button>
         <div class="pk-status"></div>`;
     }
     paintPeek(l);
     peekEl.hidden = false;
+    setStatusTint(true);
     tick(15);
-    anim(peekEl, [{ opacity: 0 }, { opacity: 1 }], { duration: 220, easing: 'ease-out' });
-    anim(peekBody, [{ transform: 'scale(.82)', opacity: 0 }, { transform: 'none', opacity: 1 }], { duration: 560, easing: SPRING.bouncy });
+    anim(peekBg, [{ opacity: 0 }, { opacity: 1 }], { duration: 220, easing: 'ease-out' });
+    anim(peekBody, [{ transform: 'scale(.82)' }, { transform: 'none' }], { duration: 560, easing: SPRING.bouncy });
+    peekParts().forEach(n => anim(n, [{ opacity: 0 }, { opacity: 1 }], { duration: 200, easing: 'ease-out' }));
   }
   function closePeek(){
     if (peekId == null) return;
     peekId = null; closeDropdown(); closePicker(true);
-    const done = () => { peekEl.hidden = true; peekBody.innerHTML = ''; };
-    const a = REDUCE.matches ? null : peekEl.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 180, easing: 'ease-in' });
-    a ? (a.onfinish = done) : done();
+    const done = () => { peekEl.hidden = true; peekBody.innerHTML = ''; setStatusTint(false); };
+    if (REDUCE.matches) return done();
+    const o = { duration: 180, easing: 'ease-in', fill: 'forwards' };
+    const a = peekBg.animate([{ opacity: 1 }, { opacity: 0 }], o);
+    peekParts().forEach(n => n.animate([{ opacity: 1 }, { opacity: 0 }], o));
+    peekBody.animate([{ transform: 'none' }, { transform: 'scale(.94)' }], o);
+    a.onfinish = () => { done(); peekEl.getAnimations({ subtree: true }).forEach(x => x.cancel()); };
   }
   function paintPeek(l){
     const q = s => peekBody.querySelector(s);
@@ -1333,6 +1354,14 @@ button{ font:inherit; color:inherit; border:0; background:none; padding:0; margi
       const want = l.busy ? 'busy' : l.on ? 'on' : 'off';
       if (c._s !== want){ c._s = want; q('.pk-oi').innerHTML = l.busy ? PROGRESS(l.on ? '#636466' : '#ffffff') : PEEK_OUTLET(l.on ? '#F8B541' : 'white'); }
       q('.pk-status').textContent = l.busy ? (l.on ? 'Turning Off…' : 'Turning On…') : l.on ? 'On' : 'Off';
+    }
+    if (l.type === 'lock'){
+      // locked = white circle with the amber lock (like an outlet that's on); unlocked = translucent with a white open lock
+      const c = q('.pk-circle');
+      c.classList.toggle('on', l.locked); c.classList.toggle('busy', l.busy);
+      const want = l.busy ? 'busy' : l.locked ? 'locked' : 'open';
+      if (c._s !== want){ c._s = want; q('.pk-oi').innerHTML = l.busy ? PROGRESS(l.locked ? '#636466' : '#ffffff') : l.locked ? LOCK_FILL : LOCK_OPEN.replace('#636466', 'white'); }
+      q('.pk-status').textContent = l.busy ? (l.locked ? 'Unlocking…' : 'Locking…') : l.locked ? 'Locked' : 'Unlocked';
     }
   }
   // brightness pill: drag to set, tap to switch on/off
@@ -1383,6 +1412,7 @@ button{ font:inherit; color:inherit; border:0; background:none; padding:0; margi
     });
     if (act === 'fan') openDropdown(b, ['auto', 'low', 'medium', 'high'].map(k => ({ key: k, label: cap(k), checked: l.fan === k })), it => { l.fan = it.key; paint(l); });
     if (act === 'outlet'){ toggleOutlet(l); anim(b, [{ scale: '.94' }, { scale: '1' }], { duration: 500, easing: SPRING.bouncy }); }
+    if (act === 'lock'){ toggleLock(l); anim(b, [{ scale: '.94' }, { scale: '1' }], { duration: 500, easing: SPRING.bouncy }); }
     if (act === 'color') openPicker(l);
   });
   document.getElementById('peekSettings').addEventListener('click', e => { e.stopPropagation(); toast('Settings isn’t part of this prototype'); });
