@@ -189,6 +189,11 @@ button{ font:inherit; color:inherit; border:0; background:none; padding:0; margi
 .w.thermo.cooling .num,.w.thermo.cooling .copy .name,.w.thermo.cooling .copy .state{ color:#173868; }
 .w.thermo.heating .num,.w.thermo.heating .copy .name,.w.thermo.heating .copy .state{ color:#693017; }
 .w.thermo.off .copy .name,.w.thermo.off .copy .state{ color:#404040; }
+.w.thermo{ --tn-auto:22px; }
+.w.thermo[data-size="2x1"],.w.thermo[data-size="3x1"],.w.thermo[data-size="1x2"]{ --tn-auto:30px; }
+.w.thermo[data-size="2x2"]{ --tn-auto:34px; } .w.thermo[data-size="3x2"]{ --tn-auto:40px; } .w.thermo[data-size="3x3"]{ --tn-auto:48px; }
+.w.thermo.auto .tnum .num{ font-size:var(--tn-auto); letter-spacing:-.3px; }
+.w.thermo.auto[data-size="1x1"] .chev{ opacity:0; pointer-events:none; }
 .chev{ position:absolute; z-index:2; width:var(--chev); height:var(--chev); display:flex; align-items:center; justify-content:center; pointer-events:auto; color:var(--ink); border-radius:50%; transition:background .15s ease, opacity .25s ease; }
 .chev svg{ width:calc(var(--chev) * .5); height:auto; display:block; }
 .chev.down svg{ transform:rotate(180deg); }
@@ -274,90 +279,89 @@ button{ font:inherit; color:inherit; border:0; background:none; padding:0; margi
 .dd-ic svg{ width:28px; height:28px; }
 .dd .l{ padding-left:4px; white-space:nowrap; }
 
-/* Peek & Pop */
-.peek{ position:absolute; inset:0; z-index:30; color:#fff; }
+/* Peek & Pop — a sheet over a softly blurred dashboard (Figma "Peek & Pop") */
+.peek{ position:absolute; inset:0; z-index:30; color:#fff; overflow:hidden; }
+.peek[hidden]{ display:none; }
 html.peek-open,html.peek-open body{ background:#87878A !important; transition:background-color .2s ease; }
 /* the dim + blur lives on its own layer: glass controls sit beside it (not inside it), so their own blur keeps working while things fade */
 .pk-bg{ position:absolute; inset:0; background:rgba(0,0,0,.45); -webkit-backdrop-filter:blur(20px); backdrop-filter:blur(20px); }
-.pk-oi > svg:not(.spin){ width:88px; height:88px; }
-.peek[hidden]{ display:none; }
-.pk-body{ position:absolute; left:0; right:0; margin:0 auto; top:calc(var(--sb) + 138px); width:282px; display:flex; flex-direction:column; align-items:center; gap:16px; }
-.pk-title,.pk-status{ font-weight:600; font-size:17px; line-height:22px; letter-spacing:-.43px; text-align:center; width:100%; }
-.pk-status{ font-weight:400; font-variant-numeric:tabular-nums; }
-.pk-glass{ background:rgba(255,255,255,.12); -webkit-backdrop-filter:blur(16px) saturate(1.6); backdrop-filter:blur(16px) saturate(1.6);
-  box-shadow:inset 0 0 0 .5px rgba(255,255,255,.22),inset 0 1px 0 rgba(255,255,255,.28),0 8px 24px rgba(0,0,0,.12); }
-.pk-btn{ position:relative; width:44px; height:44px; border-radius:1000px; display:flex; align-items:center; justify-content:center; flex:none;
-  background:rgba(255,255,255,.12); -webkit-backdrop-filter:blur(16px) saturate(1.6); backdrop-filter:blur(16px) saturate(1.6);
-  box-shadow:inset 0 0 0 .5px rgba(255,255,255,.25),inset 0 1px 0 rgba(255,255,255,.3),0 6px 18px rgba(0,0,0,.12); }
-.pk-btn svg{ mix-blend-mode:plus-lighter; }
-.pk-temp{ width:100%; height:86px; display:flex; align-items:center; justify-content:space-between; }
-.pk-num{ font-weight:700; font-size:72px; line-height:86px; letter-spacing:.4px; font-variant-numeric:tabular-nums; }
-.pk-temp.off .pk-num{ opacity:.55; }
-.pk-group{ width:100%; margin-top:8px; border-radius:26px; overflow:hidden; background:rgba(255,255,255,.12); -webkit-backdrop-filter:blur(16px) saturate(1.6); backdrop-filter:blur(16px) saturate(1.6);
-  box-shadow:inset 0 0 0 .5px rgba(255,255,255,.22),inset 0 1px 0 rgba(255,255,255,.28),0 8px 24px rgba(0,0,0,.12); }
-.pk-row{ width:100%; height:52px; display:flex; align-items:center; gap:8px; padding:0 16px; color:#fff; text-align:left; }
-.pk-row:active{ background:rgba(255,255,255,.08); }
-.pk-ic{ width:32px; height:32px; display:flex; align-items:center; justify-content:center; flex:none; }
-.pk-lab{ flex:1; font-size:15px; line-height:20px; letter-spacing:-.23px; }
-.pk-val{ display:flex; align-items:center; gap:6px; font-size:15px; line-height:20px; color:rgba(255,255,255,.7); }
-.pk-sep{ height:1px; margin:0 16px 0 56px; background:rgba(255,255,255,.18); }
-.pk-single .pk-row{ padding:0 10px 0 16px; }
-.pk-swatch{ width:32px; height:32px; border-radius:50%; padding:3px; flex:none;
-  background:conic-gradient(from 0deg, #ff3b30, #ff9500, #ffcc00, #34c759, #00c7be, #007aff, #5856d6, #af52de, #ff2d55, #ff3b30); }
-.pk-swatch i{ display:block; width:100%; height:100%; border-radius:50%; border:2px solid #fff; background:#F8B541; }
-.pk-pill{ position:relative; width:118px; height:244px; border-radius:26px; overflow:hidden; touch-action:none; cursor:ns-resize;
-  background:rgba(255,255,255,.14); -webkit-backdrop-filter:blur(16px) saturate(1.6); backdrop-filter:blur(16px) saturate(1.6);
-  box-shadow:inset 0 0 0 .5px rgba(255,255,255,.25),inset 0 1px 0 rgba(255,255,255,.3),0 10px 30px rgba(0,0,0,.18); }
-.pk-fill{ position:absolute; left:0; right:0; bottom:0; background:#fff; transition:height .45s var(--spring-soft); box-shadow:0 -1px 0 rgba(255,255,255,.4); }
-.pk-fill.drag{ transition:none; }
-.pk-circle{ position:relative; width:244px; height:244px; border-radius:50%; display:flex; align-items:center; justify-content:center; transition:background-color .35s ease;
+.pk-head{ position:absolute; z-index:3; left:0; right:0; top:var(--sb); height:56px; padding:0 16px; display:flex; align-items:flex-start; gap:12px; }
+.pk-hbtn{ width:44px; height:44px; flex:none; border-radius:1000px; display:flex; align-items:center; justify-content:center;
   background:rgba(255,255,255,.16); -webkit-backdrop-filter:blur(16px) saturate(1.6); backdrop-filter:blur(16px) saturate(1.6);
-  box-shadow:inset 0 0 0 .5px rgba(255,255,255,.28),inset 0 1px 0 rgba(255,255,255,.3),0 10px 30px rgba(0,0,0,.18); }
-.pk-circle.on{ background:rgba(255,255,255,.94); }
-.pk-oi{ width:88px; height:88px; display:flex; align-items:center; justify-content:center; }
-.pk-oi svg.spin{ width:56px; height:56px; }
-.pk-settings{ position:absolute; left:50%; transform:translateX(-50%); bottom:80px; display:flex; flex-direction:column; align-items:center; gap:8px; font-size:15px; line-height:20px; letter-spacing:-.23px; }
-
-/* light colour picker — Home-app style: big wheel (colour or white temperature), mode toggles, brightness slider, warmth presets */
-.cp-scrim{ position:absolute; inset:0; z-index:48; background:rgba(0,0,0,.4); }
-.cp-scrim[hidden],.cp[hidden]{ display:none; }
-.cp{ position:absolute; left:0; right:0; bottom:0; top:max(12px, calc(var(--sb) - 14px)); z-index:49; border-radius:38px 38px 0 0;
-  background:#171718; color:#fff; display:flex; flex-direction:column; align-items:center; padding:0 24px 24px;
-  box-shadow:0 -10px 40px rgba(0,0,0,.3); }
-.cp-grabber{ width:36px; height:5px; border-radius:3px; background:rgba(255,255,255,.28); margin-top:6px; flex:none; }
-.cp-head{ align-self:stretch; display:flex; justify-content:flex-end; margin-top:13px; flex:none; }
-.cp-done{ height:34px; padding:0 15px; border-radius:100px; font-weight:600; font-size:17px; letter-spacing:-.43px; color:#3D8CF0;
-  background:rgba(255,255,255,.12); box-shadow:inset 0 0 0 .5px rgba(255,255,255,.12),inset 0 1px 0 rgba(255,255,255,.12); }
-.cp-wheel{ position:relative; width:min(352px, 100%); aspect-ratio:1; border-radius:50%; margin-top:40px; flex:none; touch-action:none; cursor:pointer; outline:none;
-  box-shadow:0 0 0 .5px rgba(255,255,255,.08); }
-.cp-wheel[data-mode="temp"]{ background:linear-gradient(to bottom,#ED9038 0%,#F2B37A 20%,#F6D3B3 35%,#FBEEE3 50%,#FFFEFA 58%,#FFFFFF 65%,#E7E9F8 75%,#D3DCF8 90%,#C9D8F7 100%); }
-.cp-wheel[data-mode="color"]{ background:radial-gradient(circle closest-side,#fff 0%,rgba(255,255,255,0) 100%),conic-gradient(from 90deg,#f00,#ff0,#0f0,#0ff,#00f,#f0f,#f00); }
-.cp-wheel:focus-visible{ box-shadow:0 0 0 3px #3D8CF0; }
-.cp-knob{ position:absolute; width:40px; height:40px; margin:-20px 0 0 -20px; border-radius:50%; border:4px solid #fff; pointer-events:none;
-  box-shadow:0 4px 14px rgba(0,0,0,.35),inset 0 0 0 .5px rgba(0,0,0,.12); transition:left .35s var(--spring-soft), top .35s var(--spring-soft); }
-.cp-knob.drag{ transition:none; scale:1.12; }
-.cp-modes{ display:flex; gap:26px; margin-top:32px; flex:none; }
-.cp-mode{ width:48px; height:48px; border-radius:50%; padding:4px; border:3px solid transparent; transition:border-color .2s ease; }
-.cp-mode::before{ content:""; display:block; width:100%; height:100%; border-radius:50%; }
-.cp-mode.color::before{ background:radial-gradient(circle closest-side,rgba(255,255,255,.35),rgba(255,255,255,0)),conic-gradient(from 90deg,#f00,#ff0,#0f0,#0ff,#00f,#f0f,#f00); }
-.cp-mode.temp::before{ background:linear-gradient(to bottom,#ED9038,#FBEEE3 50%,#fff 60%,#C9D8F7); }
-.cp-mode[aria-checked="true"]{ border-color:#fff; }
-.cp-bright{ align-self:stretch; display:flex; align-items:center; gap:16px; margin-top:34px; flex:none; }
-.cp-sun{ width:22px; height:22px; flex:none; background:center/contain no-repeat; }
-.cp-sun.sm{ background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Ccircle cx='12' cy='12' r='4.2' fill='none' stroke='%23aeaeb2' stroke-width='1.8'/%3E%3Cg fill='%23aeaeb2'%3E%3Ccircle cx='12' cy='2.5' r='1.1'/%3E%3Ccircle cx='12' cy='21.5' r='1.1'/%3E%3Ccircle cx='2.5' cy='12' r='1.1'/%3E%3Ccircle cx='21.5' cy='12' r='1.1'/%3E%3Ccircle cx='5.3' cy='5.3' r='1.1'/%3E%3Ccircle cx='18.7' cy='18.7' r='1.1'/%3E%3Ccircle cx='5.3' cy='18.7' r='1.1'/%3E%3Ccircle cx='18.7' cy='5.3' r='1.1'/%3E%3C/g%3E%3C/svg%3E"); }
-.cp-sun.lg{ background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Ccircle cx='12' cy='12' r='4.6' fill='%23aeaeb2'/%3E%3Cg stroke='%23aeaeb2' stroke-width='1.9' stroke-linecap='round'%3E%3Cpath d='M12 1.5v3M12 19.5v3M1.5 12h3M19.5 12h3M4.6 4.6l2.1 2.1M17.3 17.3l2.1 2.1M4.6 19.4l2.1-2.1M17.3 6.7l2.1-2.1'/%3E%3C/g%3E%3C/svg%3E"); }
-.cp-track{ position:relative; flex:1; height:36px; touch-action:none; cursor:pointer; outline:none; }
-.cp-track::before{ content:""; position:absolute; left:0; right:0; top:50%; height:6px; margin-top:-3px; border-radius:3px; background:rgba(255,255,255,.14); }
-.cp-tfill{ position:absolute; left:0; top:50%; height:6px; margin-top:-3px; border-radius:3px; background:#3D8CF0; }
-.cp-thumb{ position:absolute; top:50%; width:38px; height:24px; margin:-12px 0 0 -19px; border-radius:100px; background:#fff; box-shadow:0 2px 8px rgba(0,0,0,.3); pointer-events:none; transition:scale .2s ease; }
-.cp-track.drag .cp-thumb{ scale:1.1; }
-.cp-track:focus-visible::before{ box-shadow:0 0 0 2px #3D8CF0; }
-.cp-presets{ align-self:stretch; margin-top:36px; flex:none; }
-.cp-presets > span{ display:block; font-size:13px; font-weight:600; color:#8e8e93; margin-bottom:10px; }
-.cp-favs{ display:flex; justify-content:space-between; gap:4px; }
-.cp-fav{ display:flex; flex-direction:column; align-items:center; gap:5px; font-size:10px; color:#8e8e93; font-variant-numeric:tabular-nums; }
-.cp-fav i{ width:34px; height:34px; border-radius:50%; box-shadow:inset 0 0 0 .5px rgba(255,255,255,.15); transition:box-shadow .2s ease; }
-.cp-fav.sel i{ box-shadow:0 0 0 2.5px #171718,0 0 0 4.5px #fff; }
+  box-shadow:inset 0 0 0 .5px rgba(255,255,255,.25),inset 0 1px 0 rgba(255,255,255,.3),0 6px 16px rgba(0,0,0,.1); transition:scale .3s var(--spring-bouncy); }
+.pk-hbtn:active{ scale:.92; transition:scale .1s ease-out; }
+.pk-ht{ flex:1; min-width:0; padding-top:4px; }
+.pk-hname{ font-weight:600; font-size:15px; line-height:20px; letter-spacing:-.23px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.pk-hroom{ font-size:12px; line-height:16px; color:rgba(255,255,255,.7); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.pk-body{ position:absolute; inset:0; pointer-events:none; }
+.pk-body .pc{ pointer-events:auto; }
+.pk-label{ position:absolute; left:0; right:0; top:calc(var(--sb) + 88px); text-align:center; font-size:22px; line-height:26px; letter-spacing:-.26px; font-variant-numeric:tabular-nums; }
+.pk-info{ position:absolute; left:16px; right:16px; top:calc(var(--sb) + 88px); text-align:center; font-size:17px; line-height:22px; letter-spacing:-.43px; }
+/* tall slider (light brightness, thermostat) */
+.pk-slider{ position:absolute; left:50%; margin-left:-80px; width:160px; top:calc(var(--sb) + 130px);
+  height:clamp(220px, calc(100% - var(--sb) - 292px), 460px); border-radius:26px; overflow:hidden; background:rgba(0,0,0,.25);
+  touch-action:none; cursor:ns-resize; outline:none; transition:scale .45s var(--spring-bouncy); }
+.pk-slider:focus-visible{ box-shadow:0 0 0 3px #3D8CF0; }
+.pk-fill{ position:absolute; left:0; right:0; bottom:0; background:#fff; transition:height .45s var(--spring-soft), bottom .45s var(--spring-soft); }
+.pk-fill.drag{ transition:none; }
+/* light colour sheet */
+.pk-sheet{ position:absolute; left:0; right:0; bottom:0; height:calc(100% - var(--sb) - 88px); border-radius:38px 38px 0 0; z-index:4;
+  background:rgba(0,0,0,.65); -webkit-backdrop-filter:blur(40px) saturate(1.4); backdrop-filter:blur(40px) saturate(1.4);
+  box-shadow:0 -12px 48px rgba(0,0,0,.18),inset 0 1px 0 rgba(255,255,255,.08);
+  transform:translateY(calc(100% - 122px)); transition:transform .45s cubic-bezier(.22,1,.36,1); touch-action:none; }
+.pk-sheet[data-state="open"]{ transform:none; }
+.pk-sheet.drag{ transition:none; }
+.pk-grab{ height:28px; display:flex; justify-content:center; cursor:grab; }
+.pk-grab i{ width:60px; height:4px; margin-top:6px; border-radius:100px; background:rgba(255,255,255,.45); }
+.pk-swatches{ position:absolute; left:16px; right:16px; top:42px; display:flex; gap:8px; }
+.pk-sw,.pk-add{ width:48px; height:48px; flex:none; border-radius:50%; display:flex; align-items:center; justify-content:center; transition:scale .35s var(--spring-bouncy); -webkit-touch-callout:none; }
+.pk-sw i{ width:40px; height:40px; border-radius:50%; box-shadow:inset 0 0 0 .5px rgba(0,0,0,.08); }
+.pk-sw.sel{ box-shadow:inset 0 0 0 2px #fff; }
+.pk-add{ position:relative; }
+.pk-add::after{ content:""; position:absolute; inset:4px; border-radius:50%; background:rgba(255,255,255,.15); }
+.pk-add svg{ position:relative; z-index:1; }
+.pk-sheet[data-state="peek"] .pk-add{ opacity:0; pointer-events:none; }
+.pk-add{ transition:opacity .25s ease, scale .35s var(--spring-bouncy); }
+.pk-seg{ position:absolute; left:16px; right:16px; top:130px; height:32px; padding:2px; border-radius:100px; display:grid; grid-template-columns:1fr 1fr; background:rgba(118,118,128,.24); }
+.pk-seg button{ border-radius:100px; color:#fff; font-size:13px; font-weight:500; letter-spacing:-.08px; transition:background .2s ease; }
+.pk-seg button[aria-selected="true"]{ background:rgba(255,255,255,.22); font-weight:600; box-shadow:0 2px 8px rgba(0,0,0,.15); }
+.pk-wheel{ position:absolute; left:50%; top:186px; width:min(370px, calc(100% - 32px)); aspect-ratio:1; transform:translateX(-50%); border-radius:50%; touch-action:none; cursor:pointer; outline:none; }
+.pk-wheel[data-mode="color"]{ background:radial-gradient(circle closest-side,#fff 10%,rgba(255,255,255,0) 88%),conic-gradient(from 0deg,#E7E040 0%,#EEAA3C 12%,#E8403B 25%,#B33ED5 37%,#694AE8 51%,#3CCAE7 64%,#3CE885 75%,#89E743 87%,#E7E040 100%); }
+.pk-wheel[data-mode="temp"]{ background:linear-gradient(to bottom,#D7E0FC 0%,#FFFFFF 50%,#EF8F3B 100%); }
+.pk-wheel:focus-visible{ box-shadow:0 0 0 3px #3D8CF0; }
+.pk-sheet[data-state="peek"] .pk-seg,.pk-sheet[data-state="peek"] .pk-wheel{ opacity:0; pointer-events:none; }
+.pk-seg,.pk-wheel{ transition:opacity .3s ease; }
+.pk-knob{ position:absolute; width:40px; height:40px; margin:-20px 0 0 -20px; border-radius:50%; border:4px solid #fff; pointer-events:none;
+  box-shadow:0 2px 10px rgba(0,0,0,.3); transition:left .35s var(--spring-soft), top .35s var(--spring-soft), scale .2s ease; }
+.pk-knob.drag{ transition:scale .2s ease; scale:1.12; }
+/* on/off switch (outlet, lock): knob springs between the top (on) and bottom (off) halves */
+.pk-switch{ position:absolute; left:50%; margin-left:-80px; width:160px; top:calc(var(--sb) + 130px);
+  height:clamp(220px, calc(100% - var(--sb) - 292px), 460px); border-radius:26px; background:rgba(0,0,0,.25); touch-action:none; cursor:pointer; outline:none; }
+.pk-switch:focus-visible{ box-shadow:0 0 0 3px #3D8CF0; }
+.pk-knobv{ position:absolute; left:2px; right:2px; top:2px; height:calc(50% - 2px); border-radius:24px; background:rgba(255,255,255,.5);
+  transform:translateY(calc(100% - 2px)); transition:transform .55s var(--spring-bouncy), background-color .3s ease, box-shadow .3s ease;
+  display:flex; align-items:center; justify-content:center; }
+.pk-switch.on .pk-knobv{ transform:none; background:#fff; box-shadow:0 10px 30px rgba(255,255,255,.18); }
+.pk-kspin svg{ width:40px; height:40px; }
+/* thermostat */
+.pk-tslider-wrap{ position:absolute; inset:0; pointer-events:none; }
+.pk-tscale{ position:absolute; left:50%; margin-left:-80px; width:160px; top:calc(var(--sb) + 148px); height:clamp(220px, calc(100% - var(--sb) - 340px), 442px); }
+.pk-tscale .pk-slider{ top:0; left:0; margin:0; width:100%; height:100%; }
+.pk-tlabel{ position:absolute; right:calc(100% + 16px); transform:translateY(50%); font-size:34px; line-height:41px; letter-spacing:.4px; font-variant-numeric:tabular-nums; white-space:nowrap; transition:bottom .45s var(--spring-soft); }
+.pk-tslider-wrap.off .pk-fill{ opacity:.25; }
+.pk-tslider-wrap.off .pk-tlabel,.pk-tslider-wrap.off .pk-rbtns,.pk-tslider-wrap.auto .pk-rbtns{ opacity:0; pointer-events:none; }
+.pk-rbtns{ position:absolute; left:calc(100% + 16px); top:50%; transform:translateY(-50%); display:flex; flex-direction:column; gap:16px; transition:opacity .25s ease; }
+.pk-rbtn{ width:44px; height:44px; border-radius:500px; display:flex; align-items:center; justify-content:center; background:rgba(0,0,0,.25); transition:scale .35s var(--spring-bouncy); }
+.pk-rbtn:active{ scale:.9; transition:scale .1s ease-out; }
+.pk-pills{ position:absolute; left:16px; right:16px; bottom:146px; display:flex; justify-content:center; gap:16px; }
+.pk-pill{ height:44px; padding:0 18px 0 14px; border-radius:1000px; display:flex; align-items:center; gap:6px; background:rgba(0,0,0,.25); color:#fff; font-size:15px; line-height:20px; letter-spacing:-.23px; transition:scale .35s var(--spring-bouncy); }
+.pk-pill:active{ scale:.95; transition:scale .1s ease-out; }
+.pk-pi{ width:20px; height:20px; display:flex; align-items:center; justify-content:center; }
+/* dropdown destructive item + compact variant (no checkmark column) */
+.dd .dd-i.danger{ color:#FF3B30; }
+.dd.compact{ min-width:180px; }
+.dd.compact .mi{ padding:0 12px 0 16px; justify-content:space-between; }
+.dd.compact .l{ padding-left:0; flex:1; }
 
 /* ---------- menu ---------- */
 .scrim{ position:absolute; inset:0; z-index:8; display:none; }
@@ -469,19 +473,12 @@ html.peek-open,html.peek-open body{ background:#87878A !important; transition:ba
 
     <div class="peek" id="peek" hidden>
       <div class="pk-bg"></div>
-      <div class="pk-body" id="peekBody"></div>
-      <div class="pk-settings pc"><button class="pk-btn" id="peekSettings" aria-label="Settings"><svg width="22" height="19" viewBox="0 0 22 19" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M0.879883 3.42822C0.630859 3.42822 0.420573 3.34245 0.249023 3.1709C0.0830078 2.99382 0 2.78353 0 2.54004C0 2.29655 0.0830078 2.08903 0.249023 1.91748C0.420573 1.7404 0.630859 1.65186 0.879883 1.65186H11.9033V3.42822H0.879883ZM13.7959 5.07178C13.3034 5.07178 12.8662 4.96387 12.4844 4.74805C12.1081 4.53223 11.8092 4.2334 11.5879 3.85156C11.3721 3.46973 11.2642 3.03255 11.2642 2.54004C11.2642 2.04753 11.3721 1.61035 11.5879 1.22852C11.8092 0.841146 12.1081 0.539551 12.4844 0.32373C12.8662 0.10791 13.3034 0 13.7959 0H15.8711C16.3636 0 16.8008 0.10791 17.1826 0.32373C17.5645 0.539551 17.8633 0.841146 18.0791 1.22852C18.2949 1.61035 18.4028 2.04753 18.4028 2.54004C18.4028 3.03255 18.2949 3.46973 18.0791 3.85156C17.8633 4.2334 17.5645 4.53223 17.1826 4.74805C16.8008 4.96387 16.3636 5.07178 15.8711 5.07178H13.7959ZM13.7959 3.78516H15.8711C16.2419 3.78516 16.5435 3.67171 16.7759 3.44482C17.0083 3.2124 17.1245 2.91081 17.1245 2.54004C17.1245 2.1748 17.0083 1.87598 16.7759 1.64355C16.5435 1.4056 16.2419 1.28662 15.8711 1.28662H13.7959C13.4251 1.28662 13.1235 1.4056 12.8911 1.64355C12.6642 1.87598 12.5508 2.1748 12.5508 2.54004C12.5508 2.91081 12.6642 3.2124 12.8911 3.44482C13.1235 3.67171 13.4251 3.78516 13.7959 3.78516ZM17.772 3.42822V1.65186H20.9595C21.1864 1.65186 21.3828 1.7404 21.5488 1.91748C21.7204 2.08903 21.8062 2.29655 21.8062 2.54004C21.8062 2.78353 21.7204 2.99382 21.5488 3.1709C21.3828 3.34245 21.1864 3.42822 20.9595 3.42822H17.772ZM0.85498 10.0771C0.617025 10.0771 0.415039 9.98861 0.249023 9.81152C0.0830078 9.63444 0 9.42415 0 9.18066C0 8.93717 0.0830078 8.72965 0.249023 8.55811C0.415039 8.38656 0.617025 8.30078 0.85498 8.30078H4.03418V10.0771H0.85498ZM5.93506 11.7124C5.44255 11.7124 5.00537 11.6045 4.62354 11.3887C4.2417 11.1729 3.94287 10.8768 3.72705 10.5005C3.51123 10.1187 3.40332 9.67871 3.40332 9.18066C3.40332 8.68815 3.51123 8.25098 3.72705 7.86914C3.94287 7.4873 4.2417 7.18848 4.62354 6.97266C5.00537 6.75684 5.44255 6.64893 5.93506 6.64893H8.01025C8.50277 6.64893 8.93994 6.75684 9.32178 6.97266C9.70361 7.18848 10.0024 7.4873 10.2183 7.86914C10.4341 8.25098 10.542 8.68815 10.542 9.18066C10.542 9.67871 10.4341 10.1187 10.2183 10.5005C10.0024 10.8768 9.70361 11.1729 9.32178 11.3887C8.93994 11.6045 8.50277 11.7124 8.01025 11.7124H5.93506ZM5.93506 10.4341H8.01025C8.37549 10.4341 8.67432 10.3179 8.90674 10.0854C9.14469 9.85303 9.26367 9.55143 9.26367 9.18066C9.26367 8.81543 9.14469 8.5166 8.90674 8.28418C8.67432 8.04622 8.37549 7.92725 8.01025 7.92725H5.93506C5.56982 7.92725 5.271 8.04622 5.03857 8.28418C4.80615 8.5166 4.68994 8.81543 4.68994 9.18066C4.68994 9.55143 4.80615 9.85303 5.03857 10.0854C5.271 10.3179 5.56982 10.4341 5.93506 10.4341ZM9.90283 10.0771V8.30078H20.9263C21.1698 8.30078 21.3773 8.38656 21.5488 8.55811C21.7204 8.72965 21.8062 8.93717 21.8062 9.18066C21.8062 9.42415 21.7204 9.63444 21.5488 9.81152C21.3773 9.98861 21.1698 10.0771 20.9263 10.0771H9.90283ZM0.879883 16.7178C0.630859 16.7178 0.420573 16.6292 0.249023 16.4521C0.0830078 16.2806 0 16.0731 0 15.8296C0 15.5861 0.0830078 15.3758 0.249023 15.1987C0.420573 15.0272 0.630859 14.9414 0.879883 14.9414H11.9033V16.7178H0.879883ZM13.7959 18.3613C13.3034 18.3613 12.8662 18.2534 12.4844 18.0376C12.1081 17.8218 11.8092 17.5229 11.5879 17.1411C11.3721 16.7648 11.2642 16.3276 11.2642 15.8296C11.2642 15.3371 11.3721 14.8999 11.5879 14.5181C11.8092 14.1307 12.1081 13.8291 12.4844 13.6133C12.8662 13.3975 13.3034 13.2896 13.7959 13.2896H15.8711C16.3636 13.2896 16.8008 13.3975 17.1826 13.6133C17.5645 13.8291 17.8633 14.1307 18.0791 14.5181C18.2949 14.8999 18.4028 15.3371 18.4028 15.8296C18.4028 16.3276 18.2949 16.7648 18.0791 17.1411C17.8633 17.5229 17.5645 17.8218 17.1826 18.0376C16.8008 18.2534 16.3636 18.3613 15.8711 18.3613H13.7959ZM13.7959 17.0747H15.8711C16.2419 17.0747 16.5435 16.9585 16.7759 16.7261C17.0083 16.4992 17.1245 16.2004 17.1245 15.8296C17.1245 15.4644 17.0083 15.1655 16.7759 14.9331C16.5435 14.6951 16.2419 14.5762 15.8711 14.5762H13.7959C13.4251 14.5762 13.1235 14.6951 12.8911 14.9331C12.6642 15.1655 12.5508 15.4644 12.5508 15.8296C12.5508 16.2004 12.6642 16.4992 12.8911 16.7261C13.1235 16.9585 13.4251 17.0747 13.7959 17.0747ZM17.772 16.7178V14.9414H20.9595C21.1864 14.9414 21.3828 15.0272 21.5488 15.1987C21.7204 15.3758 21.8062 15.5861 21.8062 15.8296C21.8062 16.0731 21.7204 16.2806 21.5488 16.4521C21.3828 16.6292 21.1864 16.7178 20.9595 16.7178H17.772Z" fill="white"/></svg></button><span>Settings</span></div>
-    </div>
-    <div class="cp-scrim" id="cpScrim" hidden></div>
-    <div class="cp" id="cp" hidden role="dialog" aria-label="Light colour">
-      <div class="cp-grabber" aria-hidden="true"></div>
-      <div class="cp-head"><button class="cp-done" id="cpClose">Done</button></div>
-      <div class="cp-wheel" id="cpWheel" data-mode="temp" role="slider" aria-label="Light colour" tabindex="0"><i class="cp-knob" id="cpKnob"></i></div>
-      <div class="cp-modes" role="radiogroup" aria-label="Colour mode">
-        <button class="cp-mode color" data-mode="color" role="radio" aria-checked="false" aria-label="Colour"></button>
-        <button class="cp-mode temp" data-mode="temp" role="radio" aria-checked="true" aria-label="White temperature"></button>
+      <div class="pk-head">
+        <button class="pk-hbtn pc" id="peekBack" aria-label="Back"></button>
+        <div class="pk-ht"><div class="pk-hname"></div><div class="pk-hroom"></div></div>
+        <button class="pk-hbtn pc" id="peekSettings" aria-label="Settings"></button>
       </div>
-      <div class="cp-presets"><span>Presets</span><div class="cp-favs" id="cpFavs"></div></div>
+      <div class="pk-body" id="peekBody"></div>
     </div>
 
     <div class="toast" id="toast" role="status" aria-live="polite"></div>
@@ -614,7 +611,7 @@ html.peek-open,html.peek-open body{ background:#87878A !important; transition:ba
     const base = { id: nextId++, type, name, w: 1, h: 1 };
     if (type === 'light') Object.assign(base, { on: false, b: 100, color: DEFAULT_LIGHT });
     if (type === 'lock') Object.assign(base, { locked: true, busy: false });
-    if (type === 'thermo') Object.assign(base, { on: true, cur: 75, target: 72, mode: 'auto', fan: 'auto' });
+    if (type === 'thermo') Object.assign(base, { on: true, cur: 75, target: 72, low: 66, high: 70, mode: 'cool', fan: 'auto', outside: 80, humidity: 30 });
     if (type === 'camera') Object.assign(base, { w: 2, h: 2, live: false, ts: '2h ago' });
     if (type === 'outlet') Object.assign(base, { on: false, busy: false });
     if (type === 'arm') Object.assign(base, { w: 3, h: 1, mode: 'away', pending: null });
@@ -624,8 +621,8 @@ html.peek-open,html.peek-open body{ background:#87878A !important; transition:ba
     // default layout: arm bar across the top; light, lock, thermostat in a row; 3x2 camera below
     items: [
       mk('arm', 'Security'),
-      mk('light', 'Front Porch'),
-      mk('lock', 'Back Door', { locked: true }),
+      mk('light', 'Front Porch', { room: 'Front Porch' }),
+      mk('lock', 'Back Door', { locked: true, room: 'Kitchen' }),
       mk('thermo', 'Thermostat', { cur: 66, target: 66 }),
       mk('camera', 'Kitchen', { w: 3, h: 2 })
     ],
@@ -653,7 +650,8 @@ html.peek-open,html.peek-open body{ background:#87878A !important; transition:ba
     const d = t.target - t.cur;
     if (t.mode === 'heat') return d > 0 ? 'heating' : 'idle';
     if (t.mode === 'cool') return d < 0 ? 'cooling' : 'idle';
-    return d < 0 ? 'cooling' : d > 0 ? 'heating' : 'idle';
+    // Auto keeps the room inside a band: cool above the high set point, heat below the low one
+    return t.cur > t.high ? 'cooling' : t.cur < t.low ? 'heating' : 'idle';
   }
   const MODE_LABEL = { cooling: 'Cooling', heating: 'Heating', idle: 'Idle', off: 'Off' };
 
@@ -769,8 +767,11 @@ html.peek-open,html.peek-open body{ background:#87878A !important; transition:ba
       const mode = thermoMode(l);
       el.classList.remove('cooling', 'heating', 'idle', 'off'); el.classList.add(mode);
       // big number = target; detail line = mode • current room temperature
-      el._num.textContent = l.target;
-      el._state.textContent = !l.on ? 'Off' : `${MODE_LABEL[mode]} • ${l.cur}`;
+      // Auto shows its band (e.g. 68–72); when it's holding inside the band the status reads "Auto"
+      const auto = l.on && l.mode === 'auto';
+      el.classList.toggle('auto', auto);
+      el._num.textContent = auto ? `${l.low}–${l.high}` : l.target;
+      el._state.textContent = !l.on ? 'Off' : `${auto && mode === 'idle' ? 'Auto' : MODE_LABEL[mode]} • ${l.cur}`;
       g.setAttribute('aria-label', `${l.name}, ${l.cur} degrees, ${l.on ? MODE_LABEL[mode] + ', set to ' + l.target : 'off'}`);
       g.setAttribute('aria-pressed', String(l.on));
     }
@@ -794,7 +795,6 @@ html.peek-open,html.peek-open body{ background:#87878A !important; transition:ba
       g.setAttribute('aria-label', `Security mode: ${ARM[l.mode].label}${l.pending ? ', switching to ' + ARM[l.pending].label : ''}`);
     }
     if (peekId === l.id) paintPeek(l);
-    if (cpLight && cpLight.id === l.id) paintPicker();
   }
 
   function render(){
@@ -924,7 +924,10 @@ html.peek-open,html.peek-open body{ background:#87878A !important; transition:ba
   function nudgeThermo(l, dir){
     const el = els.get(l.id);
     if (!l.on){ l.on = true; }
-    l.target = Math.max(50, Math.min(90, l.target + dir));
+    if (l.mode === 'auto'){
+      // arrows shift the whole Auto band
+      if (l.low + dir >= 50 && l.high + dir <= 90){ l.low += dir; l.high += dir; }
+    } else l.target = Math.max(50, Math.min(90, l.target + dir));
     l.lastNudge = Date.now();
     paint(l); tick(6);
     if (el) rollNumber(el._num, dir);
@@ -1249,8 +1252,9 @@ html.peek-open,html.peek-open body{ background:#87878A !important; transition:ba
   function openDropdown(anchor, items, onPick, opts = {}){
     closeDropdown();
     const box = document.createElement('div'); box.className = 'dd'; box.setAttribute('role', 'menu');
-    box.innerHTML = items.map((it, i) => `<button class="mi dd-i" role="menuitemradio" aria-checked="${!!it.checked}" data-i="${i}">
-      <span class="dd-ck">${it.checked ? CHECK : ''}</span>${it.icon ? `<span class="dd-ic">${it.icon}</span>` : ''}<span class="l">${it.label}</span></button>`).join('');
+    if (opts.compact) box.classList.add('compact');
+    box.innerHTML = items.map((it, i) => `<button class="mi dd-i${it.danger ? ' danger' : ''}" role="${opts.compact ? 'menuitem' : 'menuitemradio'}" aria-checked="${!!it.checked}" data-i="${i}">
+      ${opts.compact ? '' : `<span class="dd-ck">${it.checked ? CHECK : ''}</span>`}${it.icon && !opts.compact ? `<span class="dd-ic">${it.icon}</span>` : ''}<span class="l">${it.label}</span>${it.icon && opts.compact ? `<span class="dd-ic">${it.icon}</span>` : ''}</button>`).join('');
     const sc = document.createElement('div'); sc.className = 'dd-scrim';
     phone.append(sc, box);
     const pr = phone.getBoundingClientRect(), ar = anchor.getBoundingClientRect();
@@ -1279,264 +1283,396 @@ html.peek-open,html.peek-open body{ background:#87878A !important; transition:ba
     box.querySelector('.dd-i').focus({ preventScroll: true });
   }
 
-  // ---------- Peek & Pop ----------
+  // ---------- Peek & Pop (sheet over a blurred dashboard) ----------
   const peekEl = document.getElementById('peek');
   const peekBody = document.getElementById('peekBody');
+  const peekBg = peekEl.querySelector('.pk-bg');
+  const peekHead = peekEl.querySelector('.pk-head');
   // home-screen app: tint the system status-bar area to match the dimmed Peek & Pop background
   const themeMeta = document.querySelector('meta[name="theme-color"]');
   const setStatusTint = on => {
     if (themeMeta) themeMeta.setAttribute('content', on ? '#87878A' : '#f2f2f6');
-    // iOS paints the strip behind the status bar from the page background, so darken that too while Peek & Pop is open
     document.documentElement.classList.toggle('peek-open', on);
   };
-  const peekBg = peekEl.querySelector('.pk-bg');
   // fade each control on its own: fading a parent of glass breaks the glass's backdrop blur and causes a flash
-  const peekParts = () => peekEl.querySelectorAll('.pk-title,.pk-status,.pk-num,.pk-btn,.pk-group,.pk-pill,.pk-circle,.pk-settings > span');
+  const peekParts = () => peekEl.querySelectorAll('.pk-head > *, .pk-label, .pk-info, .pk-slider, .pk-switch, .pk-tlabel, .pk-rbtn, .pk-pill, .pk-sheet');
+  const ROOM = l => l.room || 'Living Room';
   let peekId = null, peekOpenedAt = 0;
+
+  // glyphs (Figma)
+  const BACK_GLYPH = '<svg width="11" height="19" viewBox="0 0 11 19" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M0 9.26367C0 9.09766 0.0276693 8.94824 0.0830078 8.81543C0.14388 8.68262 0.237956 8.55534 0.365234 8.43359L8.77393 0.307129C8.97868 0.102376 9.23047 0 9.5293 0C9.72852 0 9.90837 0.0498047 10.0688 0.149414C10.2349 0.24349 10.3649 0.370768 10.459 0.53125C10.5586 0.691732 10.6084 0.871582 10.6084 1.0708C10.6084 1.3641 10.5005 1.62142 10.2847 1.84277L2.58154 9.26367L10.2847 16.6763C10.5005 16.8976 10.6084 17.1549 10.6084 17.4482C10.6084 17.653 10.5586 17.8356 10.459 17.9961C10.3649 18.1621 10.2349 18.2922 10.0688 18.3862C9.90837 18.4803 9.72852 18.5273 9.5293 18.5273C9.23047 18.5273 8.97868 18.425 8.77393 18.2202L0.365234 10.0938C0.237956 9.97201 0.14388 9.84473 0.0830078 9.71191C0.0276693 9.57357 0 9.42415 0 9.26367Z" fill="white"/></svg>';
+  const T_UP = '<svg width="15" height="9" viewBox="0 0 15 9" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M0.224121 6.82324L6.64893 0.249023C6.80387 0.0830078 6.99202 0 7.21338 0C7.31852 0 7.41813 0.0221354 7.51221 0.0664062C7.61182 0.110677 7.69759 0.171549 7.76953 0.249023L14.1943 6.82324C14.3438 6.96712 14.4185 7.14697 14.4185 7.36279C14.4185 7.50667 14.3853 7.63672 14.3188 7.75293C14.2524 7.86361 14.1611 7.95215 14.0449 8.01855C13.9342 8.08496 13.807 8.11816 13.6631 8.11816C13.4417 8.11816 13.2619 8.04622 13.1235 7.90234L6.76514 1.41113H7.65332L1.29492 7.90234C1.16211 8.04622 0.982259 8.11816 0.755371 8.11816C0.611491 8.11816 0.481445 8.08496 0.365234 8.01855C0.254557 7.95215 0.166016 7.86361 0.0996094 7.75293C0.0332031 7.63672 0 7.50667 0 7.36279C0 7.25765 0.0193685 7.15804 0.0581055 7.06396C0.0968424 6.96989 0.152181 6.88965 0.224121 6.82324Z" fill="white"/></svg>';
+  const T_DOWN = '<svg width="15" height="9" viewBox="0 0 15 9" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M7.21338 8.11816C7.00309 8.11816 6.81494 8.03792 6.64893 7.87744L0.224121 1.30322C0.152181 1.23128 0.0968424 1.15104 0.0581055 1.0625C0.0193685 0.968424 0 0.868815 0 0.763672C0 0.619792 0.0332031 0.489746 0.0996094 0.373535C0.166016 0.257324 0.254557 0.166016 0.365234 0.0996094C0.481445 0.0332031 0.611491 0 0.755371 0C0.965658 0 1.14551 0.0719401 1.29492 0.21582L7.65332 6.71533H6.76514L13.1235 0.21582C13.2785 0.0719401 13.4583 0 13.6631 0C13.807 0 13.9342 0.0332031 14.0449 0.0996094C14.1611 0.166016 14.2524 0.257324 14.3188 0.373535C14.3853 0.489746 14.4185 0.619792 14.4185 0.763672C14.4185 0.968424 14.3438 1.14551 14.1943 1.29492L7.76953 7.87744C7.69759 7.95492 7.61182 8.01579 7.51221 8.06006C7.41813 8.0988 7.31852 8.11816 7.21338 8.11816Z" fill="white"/></svg>';
+  const SNOW = '<svg width="14" height="15" viewBox="0 0 14 15" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M6.51855 14.8022C6.3623 14.8022 6.23779 14.7534 6.14502 14.6558C6.05225 14.563 6.00586 14.4336 6.00586 14.2676V10.6714L6.20361 7.40479L6.00586 4.13818V0.534668C6.00586 0.373535 6.05225 0.246582 6.14502 0.153809C6.23779 0.0561523 6.3623 0.00732422 6.51855 0.00732422C6.67969 0.00244141 6.80908 0.0488281 6.90674 0.146484C7.00439 0.239258 7.05322 0.368652 7.05322 0.534668V4.14551L6.84082 7.40479L7.05322 10.6641V14.2676C7.05322 14.4336 7.00439 14.5654 6.90674 14.6631C6.80908 14.7607 6.67969 14.8071 6.51855 14.8022ZM8.98682 1.53809C9.06494 1.66016 9.08447 1.78711 9.04541 1.91895C9.00635 2.0459 8.92822 2.14355 8.81104 2.21191L6.95801 3.2666C6.83105 3.33984 6.68701 3.37646 6.52588 3.37646C6.37451 3.37646 6.23047 3.33984 6.09375 3.2666L4.24072 2.21191C4.12354 2.14355 4.04541 2.0459 4.00635 1.91895C3.97217 1.78711 3.9917 1.66016 4.06494 1.53809C4.1333 1.41602 4.23096 1.34277 4.35791 1.31836C4.48486 1.28906 4.60693 1.30859 4.72412 1.37695L6.52588 2.40967L8.32764 1.37695C8.44482 1.30859 8.56689 1.28906 8.69385 1.31836C8.8208 1.34277 8.91846 1.41602 8.98682 1.53809ZM0.117188 11.0962C0.0390625 10.9595 0.0170898 10.8276 0.0512695 10.7007C0.090332 10.5688 0.178223 10.4614 0.314941 10.3784L3.43506 8.58398L6.36475 7.11914L9.09668 5.31738L12.2168 3.51562C12.3535 3.4375 12.4854 3.41309 12.6123 3.44238C12.7441 3.47168 12.8491 3.55713 12.9272 3.69873C13.0151 3.83545 13.0396 3.96973 13.0005 4.10156C12.9663 4.2334 12.8784 4.34082 12.7368 4.42383L9.6167 6.23291L6.68701 7.68311L3.9624 9.49219L0.842285 11.2939C0.700684 11.377 0.561523 11.4014 0.424805 11.3672C0.292969 11.3281 0.19043 11.2378 0.117188 11.0962ZM12.9419 11.0889C12.8638 11.2354 12.7588 11.3257 12.627 11.3599C12.4951 11.394 12.3584 11.3721 12.2168 11.2939L9.08936 9.49219L6.36475 7.67578L3.44238 6.22559L0.314941 4.4165C0.17334 4.33838 0.0854492 4.2334 0.0512695 4.10156C0.0170898 3.96484 0.0415039 3.83057 0.124512 3.69873C0.20752 3.55713 0.3125 3.47168 0.439453 3.44238C0.571289 3.41309 0.708008 3.4375 0.849609 3.51562L3.95508 5.31006L6.69434 7.11914L9.62402 8.58398L12.7368 10.3784C12.8735 10.4614 12.9614 10.5664 13.0005 10.6934C13.0396 10.8203 13.02 10.9521 12.9419 11.0889ZM12.8394 6.59912C12.771 6.73096 12.6709 6.81152 12.5391 6.84082C12.4072 6.87012 12.2827 6.85059 12.1655 6.78223L10.3271 5.71289C10.1904 5.62988 10.0879 5.52002 10.0195 5.3833C9.97559 5.31982 9.94385 5.25391 9.92432 5.18555C9.90479 5.1123 9.89258 5.03662 9.8877 4.9585L9.88037 2.82715C9.88037 2.69043 9.92676 2.57568 10.0195 2.48291C10.1123 2.38525 10.2319 2.33887 10.3784 2.34375C10.5151 2.33887 10.6274 2.38525 10.7153 2.48291C10.8032 2.57568 10.8447 2.69043 10.8398 2.82715L10.8545 4.90723L12.6489 5.95459C12.7661 6.02295 12.8442 6.11816 12.8833 6.24023C12.9224 6.3623 12.9077 6.48193 12.8394 6.59912ZM12.8394 8.1958C12.9077 8.31787 12.9224 8.43994 12.8833 8.56201C12.8442 8.68408 12.7661 8.7793 12.6489 8.84766L10.8545 9.89502L10.8398 11.9678C10.8447 12.1045 10.8032 12.2217 10.7153 12.3193C10.6274 12.417 10.5151 12.4634 10.3784 12.4585C10.2319 12.4634 10.1123 12.417 10.0195 12.3193C9.92676 12.2217 9.88037 12.1045 9.88037 11.9678L9.8877 9.84375C9.89258 9.76562 9.90479 9.68994 9.92432 9.6167C9.94385 9.54346 9.97559 9.4751 10.0195 9.41162C10.0879 9.2749 10.1904 9.16748 10.3271 9.08936L12.1655 8.02002C12.2827 7.95166 12.4072 7.93213 12.5391 7.96143C12.6709 7.99072 12.771 8.06885 12.8394 8.1958ZM4.06494 13.2715C3.9917 13.1445 3.97217 13.0176 4.00635 12.8906C4.04541 12.7637 4.12354 12.666 4.24072 12.5977L6.09375 11.543C6.2207 11.4697 6.36475 11.4331 6.52588 11.4331C6.67725 11.4331 6.82129 11.4697 6.95801 11.543L8.81104 12.5977C8.92822 12.666 9.00635 12.7637 9.04541 12.8906C9.08447 13.0176 9.06494 13.1445 8.98682 13.2715C8.91846 13.3887 8.8208 13.4619 8.69385 13.4912C8.56689 13.5205 8.44482 13.501 8.32764 13.4326L6.52588 12.3999L4.72412 13.4326C4.60693 13.501 4.48486 13.5205 4.35791 13.4912C4.23096 13.4619 4.1333 13.3887 4.06494 13.2715ZM0.219727 8.20312C0.288086 8.07617 0.385742 7.99805 0.512695 7.96875C0.644531 7.93945 0.769043 7.95898 0.88623 8.02734L2.73193 9.09668C2.86377 9.1748 2.96631 9.28223 3.03955 9.41895C3.07861 9.48242 3.10791 9.55078 3.12744 9.62402C3.14697 9.69727 3.15918 9.77295 3.16406 9.85107L3.17139 11.9751C3.17139 12.1118 3.125 12.229 3.03223 12.3267C2.93945 12.4243 2.82227 12.4707 2.68066 12.4658C2.54395 12.4707 2.4292 12.4243 2.33643 12.3267C2.24854 12.229 2.20703 12.1118 2.21191 11.9751L2.19727 9.90234L0.402832 8.85498C0.285645 8.78662 0.20752 8.69141 0.168457 8.56934C0.134277 8.44727 0.151367 8.3252 0.219727 8.20312ZM0.219727 6.60645C0.151367 6.48926 0.134277 6.36963 0.168457 6.24756C0.20752 6.12549 0.285645 6.03027 0.402832 5.96191L2.19727 4.91455L2.21191 2.83447C2.20703 2.69775 2.24854 2.58301 2.33643 2.49023C2.4292 2.39258 2.54395 2.34619 2.68066 2.35107C2.82227 2.34619 2.93945 2.39258 3.03223 2.49023C3.125 2.58301 3.17139 2.69775 3.17139 2.83447L3.16406 4.96582C3.15918 5.04395 3.14697 5.11963 3.12744 5.19287C3.10791 5.26123 3.07861 5.32715 3.03955 5.39062C2.96631 5.52734 2.86377 5.63721 2.73193 5.72021L0.88623 6.78955C0.769043 6.85791 0.644531 6.87744 0.512695 6.84814C0.385742 6.81885 0.288086 6.73828 0.219727 6.60645Z" fill="white"/></svg>';
+  const FLAME = '<svg width="13" height="16" viewBox="0 0 13 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M5.75684 15.8423C4.59961 15.8423 3.58887 15.6348 2.72461 15.2197C1.86523 14.8047 1.19629 14.2236 0.717773 13.4766C0.239258 12.7295 0 11.8555 0 10.8545C0 10.3271 0.0415039 9.8584 0.124512 9.44824C0.212402 9.03809 0.317383 8.66943 0.439453 8.34229C0.566406 8.01025 0.693359 7.69775 0.820312 7.40479C0.947266 7.11182 1.05225 6.82129 1.13525 6.5332C1.21826 6.24512 1.25977 5.9375 1.25977 5.61035C1.25977 5.44922 1.25 5.27344 1.23047 5.08301C1.21582 4.8877 1.2085 4.74365 1.2085 4.65088C1.2085 4.48975 1.25488 4.35791 1.34766 4.25537C1.44043 4.15283 1.5625 4.10156 1.71387 4.10156C1.97266 4.10156 2.23389 4.17969 2.49756 4.33594C2.76611 4.49219 3.00537 4.70947 3.21533 4.98779C3.43018 5.26123 3.59375 5.57861 3.70605 5.93994L3.33984 6.01318C3.45703 5.80811 3.53027 5.62744 3.55957 5.47119C3.59375 5.31006 3.61084 5.14648 3.61084 4.98047C3.60596 4.49707 3.51562 4.03809 3.33984 3.60352C3.16895 3.16895 2.94922 2.75635 2.68066 2.36572C2.41699 1.9751 2.14111 1.60645 1.85303 1.25977C1.7749 1.17188 1.71631 1.08154 1.67725 0.98877C1.63818 0.895996 1.61865 0.803223 1.61865 0.710449C1.61865 0.476074 1.71875 0.300293 1.91895 0.183105C2.12402 0.0610352 2.3999 0 2.74658 0C3.39111 0 4.06982 0.078125 4.78271 0.234375C5.50049 0.385742 6.21094 0.625 6.91406 0.952148C7.62207 1.27441 8.29346 1.68701 8.92822 2.18994C9.56299 2.68799 10.1245 3.28125 10.6128 3.96973C11.106 4.65332 11.4941 5.43701 11.7773 6.3208C12.0605 7.20459 12.2021 8.19336 12.2021 9.28711C12.2021 10.2686 12.0483 11.1621 11.7407 11.9678C11.438 12.7734 11.001 13.4644 10.4297 14.0405C9.8584 14.6167 9.17725 15.061 8.38623 15.3735C7.6001 15.686 6.72363 15.8423 5.75684 15.8423ZM5.83008 14.8169C6.88477 14.8169 7.81006 14.5825 8.60596 14.1138C9.40186 13.6499 10.0195 13.0005 10.459 12.1655C10.9033 11.3306 11.1255 10.3589 11.1255 9.25049C11.1255 8.31299 10.9937 7.43164 10.73 6.60645C10.4663 5.77637 10.083 5.02197 9.58008 4.34326C9.07715 3.66455 8.46924 3.07861 7.75635 2.58545C7.04834 2.0874 6.24512 1.69922 5.34668 1.4209C4.45312 1.14258 3.479 0.991211 2.42432 0.966797L2.62207 0.732422C3.01758 1.09863 3.35693 1.51367 3.64014 1.97754C3.92334 2.44141 4.14062 2.93945 4.29199 3.47168C4.44824 3.99902 4.52637 4.54346 4.52637 5.10498C4.52637 5.33936 4.49951 5.5957 4.4458 5.87402C4.39697 6.14746 4.32617 6.40869 4.2334 6.65771C4.14551 6.90674 4.03809 7.11182 3.91113 7.27295C3.78906 7.4292 3.65479 7.50732 3.5083 7.50732C3.44971 7.50732 3.40088 7.49023 3.36182 7.45605C3.32275 7.41699 3.2959 7.3584 3.28125 7.28027C3.20312 6.94336 3.10547 6.64795 2.98828 6.39404C2.87109 6.13525 2.73193 5.91309 2.5708 5.72754C2.41455 5.53711 2.23633 5.3833 2.03613 5.26611L2.20459 4.97314C2.23877 5.08545 2.26807 5.20508 2.29248 5.33203C2.31689 5.45898 2.3291 5.59326 2.3291 5.73486C2.3291 6.11572 2.28516 6.4624 2.19727 6.7749C2.11426 7.08252 2.00684 7.38037 1.875 7.66846C1.74805 7.95654 1.61865 8.25439 1.48682 8.56201C1.35986 8.86963 1.25244 9.20898 1.16455 9.58008C1.07666 9.95117 1.03271 10.376 1.03271 10.8545C1.03271 11.6455 1.23291 12.3389 1.6333 12.9346C2.03369 13.5254 2.59277 13.9868 3.31055 14.3188C4.0332 14.6509 4.87305 14.8169 5.83008 14.8169ZM5.92529 13.7842C5.2417 13.7842 4.68994 13.5962 4.27002 13.2202C3.85498 12.8394 3.64746 12.3413 3.64746 11.7261C3.64746 11.4038 3.69385 11.1279 3.78662 10.8984C3.88428 10.6641 3.99658 10.4541 4.12354 10.2686C4.25049 10.0781 4.36768 9.89746 4.4751 9.72656C4.58252 9.55078 4.65088 9.35791 4.68018 9.14795C4.68506 9.11377 4.69727 9.09424 4.7168 9.08936C4.74121 9.07959 4.76562 9.08447 4.79004 9.104C4.96094 9.25537 5.10254 9.42383 5.21484 9.60938C5.33203 9.79004 5.43701 9.98535 5.52979 10.1953C5.7251 9.93164 5.86426 9.54346 5.94727 9.03076C6.03027 8.51318 6.04004 7.9541 5.97656 7.35352C5.97168 7.31934 5.979 7.29492 5.99854 7.28027C6.01807 7.26074 6.04492 7.2583 6.0791 7.27295C6.61621 7.52686 7.06543 7.85889 7.42676 8.26904C7.78809 8.6792 8.05908 9.12598 8.23975 9.60938C8.42529 10.0928 8.51807 10.5737 8.51807 11.0522C8.51807 11.5356 8.42285 11.9849 8.23242 12.3999C8.04199 12.8149 7.75391 13.1494 7.36816 13.4033C6.9873 13.6572 6.50635 13.7842 5.92529 13.7842Z" fill="white"/></svg>';
+  const AUTO_GLYPH = '<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M5 2.5v11M5 2.5 2.4 5.1M5 2.5l2.6 2.6M11 13.5v-11M11 13.5l-2.6-2.6M11 13.5l2.6-2.6" stroke="white" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+  const POWER_GLYPH = '<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8 1.8v6M4.4 4a5.4 5.4 0 1 0 7.2 0" stroke="white" stroke-width="1.6" stroke-linecap="round"/></svg>';
+  const PLUS_GLYPH = '<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8 2.5v11M2.5 8h11" stroke="white" stroke-width="1.8" stroke-linecap="round"/></svg>';
+  const TRASH_GLYPH = '<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3.5 5.5h13M8 5.5V4a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v1.5M5 5.5l.8 10.6a1.5 1.5 0 0 0 1.5 1.4h5.4a1.5 1.5 0 0 0 1.5-1.4L15 5.5M8.5 8.5v6M11.5 8.5v6" stroke="#FF3B30" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+  const MODE_ICON = { auto: AUTO_GLYPH, heat: FLAME, cool: SNOW, off: POWER_GLYPH };
+  const FAN_SMALL = FAN_GLYPH.replace('width="32" height="32"', 'width="20" height="20"');
+
   function openPeek(l){
     peekId = l.id; peekOpenedAt = Date.now();
-    peekBody.className = 'pk-body pk-' + l.type;
-    if (l.type === 'thermo'){
-      peekBody.innerHTML = `<div class="pk-title"></div>
-        <div class="pk-temp"><button class="pk-btn pc" data-act="down" aria-label="Lower target temperature">${PEEK_DOWN}</button><span class="pk-num"></span><button class="pk-btn pc" data-act="up" aria-label="Raise target temperature">${PEEK_UP}</button></div>
-        <div class="pk-status"></div>
-        <div class="pk-group pc">
-          <button class="pk-row" data-act="mode"><span class="pk-ic">${TEMP_GLYPH}</span><span class="pk-lab">Mode</span><span class="pk-val"><span></span>${UPDOWN}</span></button>
-          <div class="pk-sep"></div>
-          <button class="pk-row" data-act="fan"><span class="pk-ic">${FAN_GLYPH}</span><span class="pk-lab">Fan Speed</span><span class="pk-val"><span></span>${UPDOWN}</span></button>
+    peekEl.dataset.type = l.type;
+    peekHead.querySelector('.pk-hname').textContent = l.name;
+    peekHead.querySelector('.pk-hroom').textContent = ROOM(l);
+    if (l.type === 'light'){
+      peekBody.innerHTML = `<div class="pk-label"></div>
+        <div class="pk-slider pc" role="slider" aria-label="Brightness" tabindex="0"><div class="pk-fill"></div></div>
+        <div class="pk-sheet pc" data-state="peek">
+          <div class="pk-grab" aria-hidden="true"><i></i></div>
+          <div class="pk-swatches" role="listbox" aria-label="Saved colours"></div>
+          <div class="pk-seg" role="tablist"><button role="tab" data-mode="color">Colors</button><button role="tab" data-mode="temp">Temperature</button></div>
+          <div class="pk-wheel" role="slider" aria-label="Light colour" tabindex="0"><i class="pk-knob"></i></div>
         </div>`;
-    } else if (l.type === 'light'){
-      peekBody.innerHTML = `<div class="pk-title"></div>
-        <div class="pk-pill pc" role="slider" aria-label="Brightness" tabindex="0"><div class="pk-fill"></div></div>
-        <div class="pk-status"></div>
-        <div class="pk-group pk-single pc"><button class="pk-row" data-act="color"><span class="pk-lab">Color</span><span class="pk-swatch"><i></i></span></button></div>`;
-      bindPill(l);
+      bindBrightness(l); bindSheet(l);
     } else if (l.type === 'outlet' || l.type === 'lock'){
-      peekBody.innerHTML = `<div class="pk-title"></div>
-        <button class="pk-circle pc" data-act="${l.type}" aria-label="${l.type === 'lock' ? 'Lock or unlock' : 'Switch outlet'}"><span class="pk-oi"></span></button>
-        <div class="pk-status"></div>`;
+      peekBody.innerHTML = `<div class="pk-label"></div>
+        <div class="pk-switch pc" role="switch" tabindex="0" aria-label="${l.type === 'lock' ? 'Lock' : 'Power'}"><div class="pk-knobv"><span class="pk-kspin"></span></div></div>`;
+      bindSwitch(l);
+    } else if (l.type === 'thermo'){
+      peekBody.innerHTML = `<div class="pk-info"></div>
+        <div class="pk-tslider-wrap"><div class="pk-tscale">
+          <div class="pk-slider pk-tslider pc" role="slider" aria-label="Target temperature" tabindex="0"><div class="pk-fill"></div></div>
+          <span class="pk-tlabel hi"></span><span class="pk-tlabel lo"></span>
+          <div class="pk-rbtns"><button class="pk-rbtn pc" data-act="up" aria-label="Raise">${T_UP}</button><button class="pk-rbtn pc" data-act="down" aria-label="Lower">${T_DOWN}</button></div>
+        </div></div>
+        <div class="pk-pills"><button class="pk-pill pc" data-act="mode"><span class="pk-pi"></span><span class="pk-pl"></span></button><button class="pk-pill pc" data-act="fan"><span class="pk-pi">${FAN_SMALL}</span><span class="pk-pl"></span></button></div>`;
+      bindThermoSlider(l);
     }
     paintPeek(l);
     peekEl.hidden = false;
     setStatusTint(true);
     tick(15);
-    anim(peekBg, [{ opacity: 0 }, { opacity: 1 }], { duration: 220, easing: 'ease-out' });
-    anim(peekBody, [{ transform: 'scale(.82)' }, { transform: 'none' }], { duration: 560, easing: SPRING.bouncy });
-    peekParts().forEach(n => anim(n, [{ opacity: 0 }, { opacity: 1 }], { duration: 200, easing: 'ease-out' }));
+    // the view rises like a sheet: dim/blur fades in, controls fade + lift
+    anim(peekBg, [{ opacity: 0 }, { opacity: 1 }], { duration: 240, easing: 'ease-out' });
+    anim(peekBody, [{ transform: 'translateY(40px) scale(.96)' }, { transform: 'none' }], { duration: 520, easing: SPRING.soft });
+    peekParts().forEach(n => anim(n, [{ opacity: 0 }, { opacity: 1 }], { duration: 220, easing: 'ease-out' }));
   }
   function closePeek(){
     if (peekId == null) return;
-    peekId = null; closeDropdown(); closePicker(true);
+    peekId = null; closeDropdown();
     const done = () => { peekEl.hidden = true; peekBody.innerHTML = ''; setStatusTint(false); };
     if (REDUCE.matches) return done();
-    const o = { duration: 180, easing: 'ease-in', fill: 'forwards' };
+    const o = { duration: 200, easing: 'ease-in', fill: 'forwards' };
     const a = peekBg.animate([{ opacity: 1 }, { opacity: 0 }], o);
     peekParts().forEach(n => n.animate([{ opacity: 1 }, { opacity: 0 }], o));
-    peekBody.animate([{ transform: 'none' }, { transform: 'scale(.94)' }], o);
+    peekBody.animate([{ transform: 'none' }, { transform: 'translateY(30px)' }], o);
     a.onfinish = () => { done(); peekEl.getAnimations({ subtree: true }).forEach(x => x.cancel()); };
   }
+
   function paintPeek(l){
     const q = s => peekBody.querySelector(s);
-    if (!q('.pk-title')) return;
-    q('.pk-title').textContent = l.name;
-    if (l.type === 'thermo'){
-      const mode = thermoMode(l);
-      q('.pk-num').textContent = l.target;
-      q('.pk-temp').classList.toggle('off', !l.on);
-      q('.pk-status').textContent = !l.on ? 'Off' : `${MODE_LABEL[mode]} • ${l.cur}`;
-      q('[data-act=mode] .pk-val span').textContent = l.on ? cap(l.mode) : 'Off';
-      q('[data-act=fan] .pk-val span').textContent = cap(l.fan);
-    }
     if (l.type === 'light'){
+      if (!q('.pk-label')) return;
+      q('.pk-label').textContent = l.on ? Math.round(l.b) + '%' : 'Off';
       q('.pk-fill').style.height = (l.on ? l.b : 0) + '%';
-      q('.pk-pill').setAttribute('aria-valuenow', Math.round(l.on ? l.b : 0));
-      q('.pk-status').textContent = l.on ? Math.round(l.b) + '%' : 'Off';
-      q('.pk-swatch i').style.background = l.color || DEFAULT_LIGHT;
+      q('.pk-slider').setAttribute('aria-valuenow', Math.round(l.on ? l.b : 0));
+      paintSheet(l);
     }
-    if (l.type === 'outlet'){
-      const c = q('.pk-circle');
-      c.classList.toggle('on', l.on); c.classList.toggle('busy', l.busy);
-      const want = l.busy ? 'busy' : l.on ? 'on' : 'off';
-      if (c._s !== want){ c._s = want; q('.pk-oi').innerHTML = l.busy ? PROGRESS(l.on ? '#636466' : '#ffffff') : PEEK_OUTLET(l.on ? '#F8B541' : 'white'); }
-      q('.pk-status').textContent = l.busy ? (l.on ? 'Turning Off…' : 'Turning On…') : l.on ? 'On' : 'Off';
+    if (l.type === 'outlet' || l.type === 'lock'){
+      if (!q('.pk-switch')) return;
+      const isOn = l.type === 'lock' ? l.locked : l.on;
+      const target = l.busy ? !isOn : isOn; // the knob moves right away; the device catches up
+      const sw = q('.pk-switch');
+      sw.classList.toggle('on', target); sw.classList.toggle('busy', !!l.busy);
+      sw.setAttribute('aria-checked', String(target));
+      q('.pk-kspin').innerHTML = l.busy ? PROGRESS(target ? '#636466' : '#ffffff') : '';
+      q('.pk-label').textContent = l.type === 'lock'
+        ? (l.busy ? (l.locked ? 'Unlocking…' : 'Locking…') : l.locked ? 'Locked' : 'Unlocked')
+        : (l.busy ? (l.on ? 'Turning Off…' : 'Turning On…') : l.on ? 'On' : 'Off');
     }
-    if (l.type === 'lock'){
-      // locked = white circle with the amber lock (like an outlet that's on); unlocked = translucent with a white open lock
-      const c = q('.pk-circle');
-      c.classList.toggle('on', l.locked); c.classList.toggle('busy', l.busy);
-      const want = l.busy ? 'busy' : l.locked ? 'locked' : 'open';
-      if (c._s !== want){ c._s = want; q('.pk-oi').innerHTML = l.busy ? PROGRESS(l.locked ? '#636466' : '#ffffff') : l.locked ? LOCK_FILL : LOCK_OPEN.replace('#636466', 'white'); }
-      q('.pk-status').textContent = l.busy ? (l.locked ? 'Unlocking…' : 'Locking…') : l.locked ? 'Locked' : 'Unlocked';
+    if (l.type === 'thermo'){
+      if (!q('.pk-info')) return;
+      q('.pk-info').innerHTML = `Outside ${l.outside ?? 80}°<br>Humidity: ${l.humidity ?? 30}%`;
+      const auto = l.on && l.mode === 'auto';
+      const wrap = q('.pk-tslider-wrap');
+      wrap.classList.toggle('auto', auto); wrap.classList.toggle('off', !l.on);
+      const fill = q('.pk-fill'), hi = q('.pk-tlabel.hi'), lo = q('.pk-tlabel.lo');
+      const pct = v => (Math.max(T_MIN, Math.min(T_MAX, v)) - T_MIN) / (T_MAX - T_MIN) * 100;
+      if (auto){
+        fill.style.bottom = pct(l.low) + '%'; fill.style.height = (pct(l.high) - pct(l.low)) + '%';
+        hi.textContent = l.high + '°'; hi.style.bottom = pct(l.high) + '%';
+        lo.textContent = l.low + '°'; lo.style.bottom = pct(l.low) + '%';
+      } else {
+        fill.style.bottom = '0%'; fill.style.height = pct(l.target) + '%';
+        hi.textContent = l.target + '°'; hi.style.bottom = pct(l.target) + '%';
+        lo.textContent = '';
+      }
+      const m = l.on ? l.mode : 'off';
+      q('[data-act=mode] .pk-pi').innerHTML = MODE_ICON[m];
+      q('[data-act=mode] .pk-pl').textContent = cap(m);
+      q('[data-act=fan] .pk-pl').textContent = cap(l.fan);
     }
   }
-  // brightness pill: drag to set, tap to switch on/off
-  function bindPill(l){
-    const pill = peekBody.querySelector('.pk-pill'), fill = peekBody.querySelector('.pk-fill');
+
+  // light brightness: drag the tall slider (relative, like Control Center); tap to switch on/off
+  function bindBrightness(l){
+    const s = peekBody.querySelector('.pk-slider'), fill = s.querySelector('.pk-fill');
     let d = null;
-    pill.addEventListener('pointerdown', e => {
-      d = { id: e.pointerId, y: e.clientY, b0: l.on ? l.b : 0, moved: false, h: pill.getBoundingClientRect().height };
-      pill.setPointerCapture(e.pointerId);
-      anim(pill, [{ scale: '1' }, { scale: '1.03' }], { duration: 160, easing: 'ease-out', fill: 'forwards' });
+    s.addEventListener('pointerdown', e => {
+      d = { id: e.pointerId, y: e.clientY, b0: l.on ? l.b : 0, moved: false, h: s.getBoundingClientRect().height };
+      s.setPointerCapture(e.pointerId);
     });
-    pill.addEventListener('pointermove', e => {
+    s.addEventListener('pointermove', e => {
       if (!d || e.pointerId !== d.id) return;
       const dy = d.y - e.clientY;
       if (!d.moved && Math.abs(dy) < 4) return;
       if (!d.moved){ d.moved = true; fill.classList.add('drag'); }
-      const b = Math.max(0, Math.min(100, d.b0 + dy / d.h * 100));
+      const raw = d.b0 + dy / d.h * 100, b = Math.max(0, Math.min(100, raw)), over = raw - b;
+      s.style.scale = over ? `${1 - Math.min(Math.abs(over), 40) / 1600} ${1 + Math.min(Math.abs(over), 40) / 800}` : '';
+      s.style.transformOrigin = over > 0 ? '50% 100%' : '50% 0%';
       if ((b === 100 || b === 0) && l.b !== b) tick(8);
       l.b = b; l.on = b > 0; paint(l);
     });
     const up = e => {
       if (!d || e.pointerId !== d.id) return;
-      pill.getAnimations().forEach(a => a.cancel());
-      anim(pill, [{ scale: '1.03' }, { scale: '1' }], { duration: 500, easing: SPRING.bouncy });
-      fill.classList.remove('drag');
+      fill.classList.remove('drag'); s.style.scale = '';
       if (!d.moved && e.type === 'pointerup') toggleLight(l);
       else { if (l.b <= 0){ l.on = false; l.b = 100; } else l.b = Math.round(l.b); paint(l); }
       d = null;
     };
-    pill.addEventListener('pointerup', up);
-    pill.addEventListener('pointercancel', up);
-    pill.addEventListener('keydown', e => {
+    s.addEventListener('pointerup', up); s.addEventListener('pointercancel', up);
+    s.addEventListener('keydown', e => {
       const step = { ArrowUp: 10, ArrowRight: 10, ArrowDown: -10, ArrowLeft: -10 }[e.key];
       if (step){ e.preventDefault(); const base = l.on ? l.b : 0; l.b = Math.max(0, Math.min(100, base + step)); l.on = l.b > 0; if (!l.on) l.b = 100; paint(l); }
       if (e.key === 'Enter' || e.key === ' '){ e.preventDefault(); toggleLight(l); }
     });
   }
+
+  // ---------- light colour sheet: saved colours row (peeks up), drag up for Colors / Temperature wheel ----------
+  // colour wheel matches Figma: yellow at the top, then orange, red, purple, blue, cyan, green; white in the centre
+  const WHEEL_STOPS = [[0, '#E7E040'], [.12, '#EEAA3C'], [.25, '#E8403B'], [.37, '#B33ED5'], [.51, '#694AE8'], [.64, '#3CCAE7'], [.75, '#3CE885'], [.87, '#89E743'], [1, '#E7E040']];
+  // temperature: cool at the top, white in the middle, warm at the bottom
+  const TEMP_STOPS = [[0, '#D7E0FC'], [.5, '#FFFFFF'], [1, '#EF8F3B']];
+  const stopAt = (stops, t) => {
+    for (let i = 1; i < stops.length; i++){
+      const [a, ca] = stops[i - 1], [b, cb] = stops[i];
+      if (t <= b) return mix(ca, cb, (t - a) / (b - a || 1));
+    }
+    return stops[stops.length - 1][1];
+  };
+  const tempAt = y => stopAt(TEMP_STOPS, y);
+  const colorAt = (x, y) => {
+    const dx = x - .5, dy = y - .5, r = Math.min(1, Math.hypot(dx, dy) / .5);
+    const t = ((Math.atan2(dx, -dy) / (2 * Math.PI)) + 1) % 1;
+    const white = Math.max(0, Math.min(1, (.88 - r) / (.88 - .1)));
+    return mix(stopAt(WHEEL_STOPS, t), '#FFFFFF', white);
+  };
+  // saved colours are shared by every light (like iOS colour-picker favourites)
+  const saved = [
+    { c: '#EFAB48', mode: 'temp', x: .5, y: .94 },
+    { c: '#ECF0FD', mode: 'temp', x: .5, y: .1 },
+    { c: '#FFFFFF', mode: 'temp', x: .5, y: .5 }
+  ];
+  const knobOf = l => l.knob || (l.knob = { mode: 'temp', x: .5, y: .94 });
+  function paintSheet(l){
+    const sh = peekBody.querySelector('.pk-sheet'); if (!sh) return;
+    const k = knobOf(l), c = (l.color || DEFAULT_LIGHT).toUpperCase();
+    const sw = sh.querySelector('.pk-swatches');
+    const key = saved.map(s => s.c).join() + '|' + c;
+    if (sw._key !== key){
+      sw._key = key;
+      sw.innerHTML = saved.map((s, i) => `<button class="pk-sw${s.c.toUpperCase() === c ? ' sel' : ''}" data-i="${i}" role="option" aria-selected="${s.c.toUpperCase() === c}" aria-label="Saved colour ${i + 1}"><i style="background:${s.c}"></i></button>`).join('')
+        + `<button class="pk-add" aria-label="Save current colour">${PLUS_GLYPH}</button>`;
+    }
+    sh.querySelectorAll('.pk-seg button').forEach(b => b.setAttribute('aria-selected', String(b.dataset.mode === k.mode)));
+    const wh = sh.querySelector('.pk-wheel'), kn = sh.querySelector('.pk-knob');
+    wh.dataset.mode = k.mode;
+    kn.style.left = k.x * 100 + '%'; kn.style.top = k.y * 100 + '%';
+    kn.style.background = c;
+  }
+  function setLightColor(l, c){
+    l.color = c.toUpperCase();
+    if (!l.on){ l.on = true; if (l.b <= 0) l.b = 100; }
+    paint(l);
+  }
+  function bindSheet(l){
+    const sh = peekBody.querySelector('.pk-sheet');
+    const wheel = sh.querySelector('.pk-wheel');
+    const setState = st => {
+      sh.dataset.state = st; sh.style.transform = '';
+      tick(6);
+    };
+    // drag the sheet by its grabber / top area; tap the grabber to toggle
+    let sd = null;
+    sh.addEventListener('pointerdown', e => {
+      if (e.target.closest('.pk-sw, .pk-add, .pk-seg, .pk-wheel')) return;
+      const r = sh.getBoundingClientRect();
+      sd = { id: e.pointerId, y: e.clientY, t: performance.now(), base: r.top, moved: false };
+      sh.setPointerCapture(e.pointerId); sh.classList.add('drag');
+    });
+    sh.addEventListener('pointermove', e => {
+      if (!sd || sd.id !== e.pointerId) return;
+      const dy = e.clientY - sd.y;
+      if (Math.abs(dy) > 4) sd.moved = true;
+      const open = sh.dataset.state === 'open';
+      const max = sh.offsetHeight - 122; // collapsed offset
+      let off = (open ? 0 : max) + dy;
+      if (off < 0) off = -Math.sqrt(-off) * 3; // rubber band past fully open
+      sh.style.transform = `translateY(${Math.min(off, max + 40)}px)`;
+    });
+    const sup = e => {
+      if (!sd || sd.id !== e.pointerId) return;
+      sh.classList.remove('drag');
+      const dy = e.clientY - sd.y, v = dy / Math.max(1, performance.now() - sd.t);
+      const open = sh.dataset.state === 'open';
+      if (!sd.moved) setState(open ? 'peek' : 'open');
+      else if (open) setState(dy > 120 || v > .6 ? 'peek' : 'open');
+      else setState(dy < -80 || v < -.5 ? 'open' : 'peek');
+      sd = null;
+    };
+    sh.addEventListener('pointerup', sup); sh.addEventListener('pointercancel', sup);
+
+    // saved colours: tap to apply, long-press for Delete; + saves the current colour
+    let lp = null;
+    sh.querySelector('.pk-swatches').addEventListener('pointerdown', e => {
+      const b = e.target.closest('.pk-sw'); if (!b) return;
+      lp = { b, x: e.clientX, y: e.clientY, fired: false };
+      lp.t = setTimeout(() => {
+        lp.fired = true; tick(15);
+        anim(b, [{ scale: '1' }, { scale: '1.12' }, { scale: '1' }], { duration: 420, easing: SPRING.bouncy });
+        const i = +b.dataset.i;
+        openDropdown(b, [{ key: 'delete', label: 'Delete', icon: TRASH_GLYPH, danger: true }], () => {
+          saved.splice(i, 1); paintSheet(l); toast('Colour deleted');
+        }, { below: true, compact: true });
+      }, 480);
+    });
+    sh.querySelector('.pk-swatches').addEventListener('pointermove', e => { if (lp && Math.hypot(e.clientX - lp.x, e.clientY - lp.y) > 8) clearTimeout(lp.t); });
+    sh.querySelector('.pk-swatches').addEventListener('pointerup', () => { if (lp) clearTimeout(lp.t); });
+    sh.querySelector('.pk-swatches').addEventListener('contextmenu', e => e.preventDefault());
+    sh.querySelector('.pk-swatches').addEventListener('click', e => {
+      e.stopPropagation(); // the row re-renders, so don't let the click reach the "tap outside closes" handler
+      const add = e.target.closest('.pk-add');
+      if (add){
+        const c = (l.color || DEFAULT_LIGHT).toUpperCase();
+        if (!saved.some(s => s.c.toUpperCase() === c)){
+          saved.push({ c, ...knobOf(l) }); paintSheet(l); tick(10);
+          const nb = sh.querySelector(`.pk-sw[data-i="${saved.length - 1}"]`);
+          if (nb) anim(nb, [{ scale: '.3', opacity: 0 }, { scale: '1', opacity: 1 }], { duration: 520, easing: SPRING.bouncy });
+        } else toast('Already saved');
+        return;
+      }
+      const b = e.target.closest('.pk-sw'); if (!b) return;
+      if (lp && lp.fired){ lp = null; return; }
+      const s = saved[+b.dataset.i]; if (!s) return;
+      Object.assign(knobOf(l), { mode: s.mode, x: s.x, y: s.y });
+      setLightColor(l, s.c); tick(6);
+      anim(b, [{ scale: '.86' }, { scale: '1' }], { duration: 420, easing: SPRING.bouncy });
+    });
+    // Colors / Temperature
+    sh.querySelectorAll('.pk-seg button').forEach(b => b.addEventListener('click', () => {
+      const k = knobOf(l); if (k.mode === b.dataset.mode) return;
+      k.mode = b.dataset.mode;
+      setLightColor(l, k.mode === 'temp' ? tempAt(k.y) : colorAt(k.x, k.y)); tick(6);
+      anim(wheel, [{ opacity: .4, scale: '.97' }, { opacity: 1, scale: '1' }], { duration: 380, easing: SPRING.soft });
+    }));
+    // wheel: drag the knob anywhere inside the circle
+    let wd = null;
+    const pick = e => {
+      const r = wheel.getBoundingClientRect();
+      let x = (e.clientX - r.left) / r.width, y = (e.clientY - r.top) / r.height;
+      const dx = x - .5, dy = y - .5, dist = Math.hypot(dx, dy), max = .5 - 20 / r.width;
+      if (dist > max){ x = .5 + dx / dist * max; y = .5 + dy / dist * max; }
+      const k = knobOf(l); k.x = x; k.y = y;
+      setLightColor(l, k.mode === 'temp' ? tempAt(y) : colorAt(x, y));
+    };
+    wheel.addEventListener('pointerdown', e => { wd = e.pointerId; wheel.setPointerCapture(e.pointerId); wheel.querySelector('.pk-knob').classList.add('drag'); pick(e); tick(6); });
+    wheel.addEventListener('pointermove', e => { if (wd === e.pointerId) pick(e); });
+    const wup = () => { wd = null; wheel.querySelector('.pk-knob').classList.remove('drag'); };
+    wheel.addEventListener('pointerup', wup); wheel.addEventListener('pointercancel', wup);
+    wheel.addEventListener('keydown', e => {
+      const k = knobOf(l), st = { ArrowUp: [0, -.04], ArrowDown: [0, .04], ArrowLeft: [-.04, 0], ArrowRight: [.04, 0] }[e.key];
+      if (!st) return; e.preventDefault();
+      const r = wheel.getBoundingClientRect();
+      pick({ clientX: r.left + (k.x + st[0]) * r.width, clientY: r.top + (k.y + st[1]) * r.height });
+    });
+  }
+
+  // ---------- on/off switch (outlet, lock): tap or drag the knob; it springs between halves ----------
+  function bindSwitch(l){
+    const sw = peekBody.querySelector('.pk-switch'), knob = sw.querySelector('.pk-knobv');
+    const flip = () => { (l.type === 'lock' ? toggleLock : toggleOutlet)(l); };
+    let d = null;
+    sw.addEventListener('pointerdown', e => {
+      if (l.busy) return;
+      const r = sw.getBoundingClientRect();
+      d = { id: e.pointerId, y: e.clientY, h: r.height, moved: false, on: sw.classList.contains('on') };
+      sw.setPointerCapture(e.pointerId);
+      knob.style.transition = 'none';
+      anim(knob, [{ scale: '1' }, { scale: '.97' }], { duration: 120, fill: 'forwards' });
+    });
+    sw.addEventListener('pointermove', e => {
+      if (!d || e.pointerId !== d.id) return;
+      const dy = e.clientY - d.y; if (Math.abs(dy) > 4) d.moved = true;
+      const half = d.h / 2 - 2;
+      let off = (d.on ? 0 : half) + dy;
+      if (off < 0) off = -Math.sqrt(-off) * 2; if (off > half) off = half + Math.sqrt(off - half) * 2;
+      knob.style.transform = `translateY(${off}px)`;
+    });
+    const up = e => {
+      if (!d || e.pointerId !== d.id) return;
+      knob.getAnimations().forEach(a => a.cancel());
+      const dy = e.clientY - d.y, half = d.h / 2 - 2;
+      const pos = Math.max(0, Math.min(half, (d.on ? 0 : half) + dy));
+      const wantOn = d.moved ? pos < half / 2 : !d.on;
+      // let the knob spring from where the finger left it
+      knob.style.transition = ''; knob.style.transform = '';
+      if (!REDUCE.matches) knob.animate([{ transform: `translateY(${d.moved ? pos : (d.on ? 0 : half)}px)` }, { transform: `translateY(${wantOn ? 0 : half}px)` }], { duration: 560, easing: SPRING.bouncy });
+      if (wantOn !== d.on) flip(); else tick(4);
+      d = null;
+    };
+    sw.addEventListener('pointerup', up); sw.addEventListener('pointercancel', up);
+    sw.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' '){ e.preventDefault(); if (!l.busy) flip(); } });
+  }
+
+  // ---------- thermostat: tall slider for the target (or a band in Auto), arrows, Mode + Fan menus ----------
+  const T_MIN = 50, T_MAX = 80;
+  function bindThermoSlider(l){
+    const s = peekBody.querySelector('.pk-tslider');
+    let d = null;
+    const valAt = e => { const r = s.getBoundingClientRect(); return Math.round(T_MIN + (1 - (e.clientY - r.top) / r.height) * (T_MAX - T_MIN)); };
+    s.addEventListener('pointerdown', e => {
+      if (!l.on) return;
+      s.setPointerCapture(e.pointerId);
+      const v = valAt(e);
+      d = { id: e.pointerId, which: l.mode === 'auto' ? (Math.abs(v - l.high) <= Math.abs(v - l.low) ? 'high' : 'low') : 'target' };
+      move(e);
+    });
+    const move = e => {
+      if (!d || e.pointerId !== d.id) return;
+      let v = Math.max(T_MIN, Math.min(T_MAX, valAt(e)));
+      if (d.which === 'high') v = Math.max(v, l.low + 2);
+      if (d.which === 'low') v = Math.min(v, l.high - 2);
+      if (l[d.which] !== v){ l[d.which] = v; l.lastNudge = Date.now(); paint(l); tick(4); }
+    };
+    s.addEventListener('pointermove', move);
+    const up = () => { d = null; };
+    s.addEventListener('pointerup', up); s.addEventListener('pointercancel', up);
+    s.addEventListener('keydown', e => { const st = { ArrowUp: 1, ArrowDown: -1 }[e.key]; if (st){ e.preventDefault(); nudgeThermo(l, st); } });
+  }
+
   peekEl.addEventListener('click', e => {
-    const l = find(peekId); if (!l) return;
-    const b = e.target.closest('[data-act]');
+    const l = find(peekId); if (!l || !e.target.isConnected) return;
     if (!e.target.closest('.pc')){ if (Date.now() - peekOpenedAt > 350) closePeek(); return; }
-    if (!b) return;
+    const b = e.target.closest('[data-act]'); if (!b) return;
     const act = b.dataset.act;
     if (act === 'up' || act === 'down'){ nudgeThermo(l, act === 'up' ? 1 : -1); anim(b, [{ scale: '.86' }, { scale: '1' }], { duration: 450, easing: SPRING.bouncy }); }
-    if (act === 'mode') openDropdown(b, ['auto', 'heat', 'cool', 'off'].map(k => ({ key: k, label: cap(k), checked: (l.on ? l.mode : 'off') === k })), it => {
-      if (it.key === 'off') l.on = false; else { l.on = true; l.mode = it.key; }
+    if (act === 'mode') openDropdown(b, ['auto', 'heat', 'cool', 'off'].map(k => ({ key: k, label: cap(k), icon: MODE_ICON[k].replace(/fill="white"/g, 'fill="#1A1A1A"').replace(/stroke="white"/g, 'stroke="#1A1A1A"'), checked: (l.on ? l.mode : 'off') === k })), it => {
+      if (it.key === 'off') l.on = false;
+      else { l.on = true; l.mode = it.key; }
       paint(l);
     });
     if (act === 'fan') openDropdown(b, ['auto', 'low', 'medium', 'high'].map(k => ({ key: k, label: cap(k), checked: l.fan === k })), it => { l.fan = it.key; paint(l); });
-    if (act === 'outlet'){ toggleOutlet(l); anim(b, [{ scale: '.94' }, { scale: '1' }], { duration: 500, easing: SPRING.bouncy }); }
-    if (act === 'lock'){ toggleLock(l); anim(b, [{ scale: '.94' }, { scale: '1' }], { duration: 500, easing: SPRING.bouncy }); }
-    if (act === 'color') openPicker(l);
   });
+  document.getElementById('peekBack').addEventListener('click', e => { e.stopPropagation(); closePeek(); });
   document.getElementById('peekSettings').addEventListener('click', e => { e.stopPropagation(); toast('Settings isn’t part of this prototype'); });
+  // the old picker API is folded into the sheet now
+  const closePicker = () => {};
 
-  // ---------- light colour picker (Home-app style) ----------
-  const cp = document.getElementById('cp'), cpScrim = document.getElementById('cpScrim');
-  const cpWheel = document.getElementById('cpWheel'), cpKnob = document.getElementById('cpKnob');
-  // white temperature runs top (warm) to bottom (cool), matching the gradient on the wheel
-  const TEMP_STOPS = [[0, '#ED9038'], [.2, '#F2B37A'], [.35, '#F6D3B3'], [.5, '#FBEEE3'], [.58, '#FFFEFA'], [.65, '#FFFFFF'], [.75, '#E7E9F8'], [.9, '#D3DCF8'], [1, '#C9D8F7']];
-  const tempAt = y => {
-    for (let i = 1; i < TEMP_STOPS.length; i++){
-      const [y1, c1] = TEMP_STOPS[i - 1], [y2, c2] = TEMP_STOPS[i];
-      if (y <= y2) return mix(c1, c2, (y - y1) / (y2 - y1 || 1));
-    }
-    return TEMP_STOPS[TEMP_STOPS.length - 1][1];
-  };
-  // colour wheel: angle = hue, distance from centre = saturation (white in the middle)
-  function hsvToHex(h, s, v){
-    const f = n => { const k = (n + h / 60) % 6; return v - v * s * Math.max(0, Math.min(k, 4 - k, 1)); };
-    return rgbToHex(f(5) * 255, f(3) * 255, f(1) * 255);
-  }
-  const colorAt = (x, y) => {
-    const dx = x - .5, dy = y - .5, r = Math.min(1, Math.hypot(dx, dy) / .5);
-    const ang = (Math.atan2(dy, dx) * 180 / Math.PI + 360) % 360;
-    return hsvToHex(ang, r, 1);
-  };
-  // typical bulb colour temperatures, placed on the white-temperature wheel
-  const WARMTH = [
-    { k: '1900K', n: 'Candlelight', y: .02 },
-    { k: '2200K', n: 'Amber', y: .1 },
-    { k: '2700K', n: 'Warm White', y: .22 },
-    { k: '3000K', n: 'Soft White', y: .32 },
-    { k: '4000K', n: 'Neutral', y: .5 },
-    { k: '5000K', n: 'Cool White', y: .66 },
-    { k: '6500K', n: 'Daylight', y: .88 }
-  ].map(w => ({ ...w, c: tempAt(w.y) }));
-  document.getElementById('cpFavs').innerHTML = WARMTH.map((w, i) => `<button class="cp-fav" data-i="${i}" title="${w.n}"><i style="background:${w.c}"></i><span>${w.k}</span></button>`).join('');
-  let cpLight = null;
-  // each light remembers where its knob sits; the default amber starts near the warm top of the white wheel
-  const knobOf = l => l.knob || (l.knob = { mode: 'temp', x: .5, y: .1, preset: 1 });
-  function openPicker(l){
-    cpLight = l; paintPicker();
-    cp.hidden = false; cpScrim.hidden = false;
-    anim(cp, [{ transform: 'translateY(100%)' }, { transform: 'none' }], { duration: 440, easing: SETTLE });
-    anim(cpScrim, [{ opacity: 0 }, { opacity: 1 }], { duration: 250 });
-  }
-  function closePicker(instant){
-    if (cp.hidden) return;
-    cpLight = null;
-    const done = () => { cp.hidden = true; cpScrim.hidden = true; };
-    if (instant || REDUCE.matches) return done();
-    cp.animate([{ transform: 'none' }, { transform: 'translateY(100%)' }], { duration: 300, easing: 'cubic-bezier(.4,0,.8,.4)' }).onfinish = done;
-    cpScrim.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 300 });
-  }
-  function paintPicker(){
-    const l = cpLight; if (!l) return;
-    const k = knobOf(l);
-    cpWheel.dataset.mode = k.mode;
-    cp.querySelectorAll('.cp-mode').forEach(b => b.setAttribute('aria-checked', String(b.dataset.mode === k.mode)));
-    cpKnob.style.left = k.x * 100 + '%'; cpKnob.style.top = k.y * 100 + '%';
-    cpKnob.style.background = l.color || DEFAULT_LIGHT;
-    document.querySelectorAll('.cp-fav').forEach(f => f.classList.toggle('sel', k.mode === 'temp' && k.preset === +f.dataset.i));
-  }
-  function setLightColor(c){
-    const l = cpLight; if (!l) return;
-    l.color = c.toUpperCase();
-    if (!l.on){ l.on = true; if (l.b <= 0) l.b = 100; }
-    paint(l); paintPicker();
-  }
-  // drag anywhere on the wheel; the knob stays inside the circle
-  let wd = null;
-  function wheelPick(e){
-    const r = cpWheel.getBoundingClientRect();
-    let x = (e.clientX - r.left) / r.width, y = (e.clientY - r.top) / r.height;
-    const dx = x - .5, dy = y - .5, d = Math.hypot(dx, dy), max = .5 - 20 / r.width;
-    if (d > max){ x = .5 + dx / d * max; y = .5 + dy / d * max; }
-    const k = knobOf(cpLight); k.x = x; k.y = y; k.preset = null;
-    setLightColor(k.mode === 'temp' ? tempAt(y) : colorAt(x, y));
-  }
-  cpWheel.addEventListener('pointerdown', e => { if (!cpLight) return; wd = e.pointerId; cpWheel.setPointerCapture(e.pointerId); cpKnob.classList.add('drag'); wheelPick(e); tick(6); });
-  cpWheel.addEventListener('pointermove', e => { if (wd === e.pointerId) wheelPick(e); });
-  const wheelUp = () => { wd = null; cpKnob.classList.remove('drag'); };
-  cpWheel.addEventListener('pointerup', wheelUp); cpWheel.addEventListener('pointercancel', wheelUp);
-  cpWheel.addEventListener('keydown', e => {
-    if (!cpLight) return;
-    const k = knobOf(cpLight), st = { ArrowUp: [0, -.04], ArrowDown: [0, .04], ArrowLeft: [-.04, 0], ArrowRight: [.04, 0] }[e.key];
-    if (!st) return; e.preventDefault();
-    const r = cpWheel.getBoundingClientRect();
-    wheelPick({ clientX: r.left + (k.x + st[0]) * r.width, clientY: r.top + (k.y + st[1]) * r.height });
-  });
-  // switching between colour and white keeps the knob where it is and re-reads the colour under it
-  cp.querySelectorAll('.cp-mode').forEach(b => b.addEventListener('click', () => {
-    const l = cpLight; if (!l) return;
-    const k = knobOf(l); if (k.mode === b.dataset.mode) return;
-    k.mode = b.dataset.mode; k.preset = null;
-    setLightColor(k.mode === 'temp' ? tempAt(k.y) : colorAt(k.x, k.y));
-    anim(cpWheel, [{ opacity: .4, scale: '.97' }, { opacity: 1, scale: '1' }], { duration: 380, easing: SPRING.soft });
-    tick(6);
-  }));
-  document.getElementById('cpFavs').addEventListener('click', e => {
-    const f = e.target.closest('.cp-fav'); if (!f || !cpLight) return;
-    const w = WARMTH[+f.dataset.i], k = knobOf(cpLight);
-    Object.assign(k, { mode: 'temp', x: .5, y: w.y, preset: +f.dataset.i });
-    setLightColor(w.c); tick(6);
-  });
-  document.getElementById('cpClose').addEventListener('click', e => { e.stopPropagation(); closePicker(); });
-  cpScrim.addEventListener('click', e => { e.stopPropagation(); closePicker(); });
-  cp.addEventListener('click', e => e.stopPropagation());
-  // swipe the sheet down by its grabber area to dismiss
-  let sd = null;
-  cp.addEventListener('pointerdown', e => { if (e.target.closest('.cp-wheel,button')) return; sd = { id: e.pointerId, y: e.clientY }; });
-  cp.addEventListener('pointermove', e => { if (sd && sd.id === e.pointerId){ const dy = Math.max(0, e.clientY - sd.y); cp.style.transform = `translateY(${dy}px)`; } });
-  const sheetUp = e => {
-    if (!sd || sd.id !== e.pointerId) return;
-    const dy = Math.max(0, e.clientY - sd.y); sd = null;
-    if (dy > 120){ cp.style.transform = ''; closePicker(); }
-    else { cp.animate([{ transform: `translateY(${dy}px)` }, { transform: 'none' }], { duration: 300, easing: SETTLE }); cp.style.transform = ''; }
-  };
-  cp.addEventListener('pointerup', sheetUp); cp.addEventListener('pointercancel', sheetUp);
+  document.getElementById('peekBack').innerHTML = BACK_GLYPH;
+  document.getElementById('peekSettings').innerHTML = SETTINGS_GLYPH;
 
   function addDevice(type){
     const used = new Set(state.items.map(l => l.name));
@@ -1630,7 +1766,6 @@ html.peek-open,html.peek-open body{ background:#87878A !important; transition:ba
   document.addEventListener('keydown', e => {
     if (e.key !== 'Escape') return;
     if (dd) closeDropdown();
-    else if (!cp.hidden) closePicker();
     else if (peekId != null) closePeek();
     else if (scrim.classList.contains('open')) closeMenus();
     else if (state.editing) setEditing(false);
